@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>АналитЭко — лаборатория мониторинга воздуха и выбросов</title>
-<meta name="robots" content="noindex, nofollow"">
+<meta name="robots" content="noindex, nofollow">
+<title>АналитЭко. Лаборатория мониторинга воздуха и выбросов</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -15,15 +15,15 @@
 :root{
   /* ---------- ПАЛИТРА ---------- */
   --bg:#F7F6F1;                 /* фон всей страницы (тёплый светлый) */
-  --surface:#FFFFFF;            /* фон карточек: услуги, статистика, таблицы, фото */
+  --surface:#FFFFFF;            /* фон карточек: услуги, статистика, таблицы */
   --surface-2:#F1F0EA;          /* фон чередующихся секций: Лаборатория, Контроль выбросов, Контакты */
   --ink:#171B18;                /* основной текст: заголовки, названия, имена */
   --ink-2:#39413B;              /* вторичный текст: абзацы, описания работ */
-  --muted:#6A726B;              /* приглушённый текст: подписи, mono-метки, подсказки */
+  --muted:#6A726B;              /* приглушённый текст: подписи, mono-метки, заглушки */
   --line:#E5E2D8;               /* тонкие линии: рамки карточек, строки таблиц, FAQ */
-  --line-strong:#D3CFC2;        /* выраженные рамки: кнопки, логотип, бургер */
-  --accent:#3E5948;             /* АКЦЕНТ: кнопки «Рассчитать стоимость», цифры статистики, подвал, линии-подсветки, метки */
-  --accent-ink:#2D4636;         /* тёмный акцент: текст при наведении */
+  --line-strong:#D3CFC2;        /* выраженные рамки: кнопки, бургер, фото */
+  --accent:#3E5948;             /* АКЦЕНТ: кнопки «Рассчитать стоимость»/«Подробнее», цифры статистики, подвал, шапка таблиц, линии-подсветки */
+  --accent-ink:#2D4636;         /* тёмный акцент: текст/фон при наведении */
   --accent-soft:#EDF2EE;        /* светлый акцент-фон: hover-состояния, плашка «актуальна для…» */
   --accent-line:#D8E1DA;        /* светлая акцент-линия: рамки карточек при hover/active */
   --footer-bg:var(--accent);    /* фон подвала = акцент (совпадает с кнопкой и цифрами статистики) */
@@ -33,8 +33,10 @@
   --footer-accent:#9FB89A;      /* акцент-подсветка в подвале (заголовки колонок, ссылки) */
 
   /* ---------- ФОРМА / ОТСТУПЫ ---------- */
+  --logo-size:68px;             /* РАЗМЕР ЛОГОТИПА: width/height .logo-slot (шапка + подвал) */
+  --sec-pt:clamp(32px,3.5vw,48px); /* вертикальный отступ секций (padding + scroll-margin для якорей) */
   --radius:18px;                /* скругление крупных блоков: карточки, таблицы, фото */
-  --radius-sm:12px;             /* скругление мелких: логотип, плашка миссии */
+  --radius-sm:12px;             /* скругление мелких: плашка миссии */
   --shadow:0 24px 70px -48px rgba(23,27,24,.35); /* мягкая тень карточек при hover */
   --wrap:1280px;                /* максимальная ширина контента (.wrap) */
 
@@ -45,8 +47,8 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-/* scroll-padding = высота шапки, чтобы при переходе по навигации заголовок не прятался под ней и не давал «широкой полосы» */
-html{scroll-behavior:smooth;scroll-padding-top:98px}
+/* scroll-padding = высота шапки (логотип 68 + отступы), чтобы якорь не прятался под ней */
+html{scroll-behavior:smooth;scroll-padding-top:108px}
 body{
   font-family:var(--font-body);
   background:var(--bg);
@@ -87,15 +89,15 @@ button{font:inherit;color:inherit}
 .masthead.scrolled{box-shadow:0 18px 44px -34px rgba(23,27,24,.28)}
 .mast-in{display:flex;align-items:center;gap:20px;padding:18px 28px}
 
-/* логотип + название */
+/* логотип + название (без рамки, размер = --logo-size) */
 .brand{display:flex;align-items:center;gap:15px;flex-shrink:0}
 .logo-slot{
-  width:58px;height:58px;             /* размер заглушки логотипа */
+  width:var(--logo-size);
+  height:var(--logo-size);
   display:grid;place-items:center;
-  border:1px solid var(--line-strong);
-  background:var(--surface);
+  border:0;
+  background:transparent;
   color:var(--muted);
-  border-radius:var(--radius-sm);
   flex-shrink:0;
 }
 .logo-ph{font-size:11px;letter-spacing:.22em;text-transform:uppercase}
@@ -213,11 +215,12 @@ button{font:inherit;color:inherit}
 .scroll-progress span{display:block;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
 
 /* =====================================================================
-   СЕКЦИИ (общие вертикальные отступы — сжаты)
+   СЕКЦИИ (вертикальные отступы = --sec-pt; scroll-margin для точного якоря на заголовке)
    ===================================================================== */
 .hero-sec{
-  padding:clamp(40px,5vw,64px) 0 clamp(48px,5vw,72px);  /* главная */
+  padding:var(--sec-pt) 0 clamp(40px,4vw,56px);
   border-bottom:1px solid var(--line);
+  scroll-margin-top:var(--sec-pt);
 }
 .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
 h1{
@@ -232,8 +235,19 @@ h1{
 .lead b{color:var(--ink)}
 .hero-cta{display:flex;gap:16px;flex-wrap:wrap}
 
-/* вертикальный padding секций уменьшен, чтобы разделы стояли ближе */
-.sec{padding:clamp(36px,4vw,56px) 0}
+/* фото героя */
+.hero-img{
+  width:100%;
+  aspect-ratio:3/2;
+  object-fit:cover;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+}
+
+.sec{
+  padding:var(--sec-pt) 0;
+  scroll-margin-top:var(--sec-pt);   /* якорь на заголовке блока, без «большого пространства сверху» */
+}
 .sec--soft{background:var(--surface-2)}
 
 /* заголовок секции: eyebrow + title + примечание справа */
@@ -264,37 +278,14 @@ h1{
   padding-bottom:6px;
 }
 
-/* декоративный разделитель (линия + градиент) между блоками */
-.divider{
-  height:56px;
-  position:relative;
-  background:linear-gradient(180deg,transparent 0%,var(--accent-soft) 50%,transparent 100%); /* градиент */
-}
+/* декоративный разделитель: только тонкая линия-акцент (без градиентного фона) */
+.divider{height:24px;position:relative;background:transparent}
 .divider::before{
   content:"";
   position:absolute;left:12%;right:12%;top:50%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent) 18%,var(--accent) 82%,transparent); /* полоса */
+  background:linear-gradient(90deg,transparent,var(--accent) 18%,var(--accent) 82%,transparent);
   opacity:.55;
 }
-
-/* заглушки изображений */
-.fig-slot{
-  position:relative;
-  border:1px solid var(--line);
-  background:var(--surface);
-  border-radius:var(--radius);
-  display:grid;
-  place-items:center;
-  align-content:center;
-  justify-items:center;
-  gap:12px;
-  color:var(--muted);
-  overflow:hidden;
-}
-.fig-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.fig-ic{width:54px;height:54px;color:var(--accent-ink);opacity:.5}
-.fig-label{font-size:12px;letter-spacing:.18em;text-transform:uppercase}
-.fig-size{font-size:11px;letter-spacing:.14em;opacity:.65}
 
 /* =====================================================================
    УСЛУГИ (сетка 3×3 карточек)
@@ -375,13 +366,13 @@ h1{
   padding:18px 24px;
   position:sticky;
   top:0;
-  background:var(--surface);
+  background:var(--accent);   /* шапка таблицы = фон кнопки «Рассчитать стоимость» */
+  color:#fff;
   z-index:2;
   font-size:10.5px;
   letter-spacing:.14em;
   text-transform:uppercase;
-  color:var(--muted);
-  border-bottom:1px solid var(--line);
+  border-bottom:0;
   white-space:nowrap;
 }
 .ind-scroll td{
@@ -400,16 +391,14 @@ h1{
 .ind-scroll td .ind-name{display:block;font-family:var(--font-body);font-weight:600;font-size:15px;line-height:1.35;color:var(--ink)}
 .ind-scroll td .ind-sub{display:block;font-family:var(--font-body);font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5}
 
+/* фото в разделах */
 .ind-photo{
-  margin:0;
-  border:1px solid var(--line);
-  background:var(--surface);
+  width:100%;
+  aspect-ratio:4/3;
+  object-fit:cover;
   border-radius:var(--radius);
-  min-height:380px;
-  height:100%;
-  color:var(--muted);
+  border:1px solid var(--line);
 }
-.ind-photo .fig-ic{color:var(--accent-ink)}
 
 /* CTA-колонка под таблицей */
 .cta-col{display:flex;flex-direction:column;align-items:flex-start;gap:20px;margin-top:32px}
@@ -443,6 +432,7 @@ h1{
   letter-spacing:-.01em;
 }
 .wrow-desc{font-size:15px;color:var(--muted);max-width:72ch;line-height:1.6}
+/* кнопка «Подробнее» — фон как у «Рассчитать стоимость» */
 .wrow-btn{
   flex-shrink:0;
   margin-left:auto;
@@ -450,26 +440,24 @@ h1{
   display:inline-flex;
   align-items:center;
   gap:8px;
-  border:1px solid var(--line-strong);
-  background:transparent;
-  color:var(--ink);
+  background:var(--accent);
+  border:1px solid var(--accent);
+  color:#fff;
   border-radius:999px;
   padding:10px 18px;
   font-size:12.5px;
   font-weight:600;
   letter-spacing:.03em;
   cursor:pointer;
-  transition:background .3s ease,border-color .3s ease,color .3s ease;
+  transition:background .3s ease,border-color .3s ease;
 }
 .wrow-btn:hover{
-  background:var(--accent-soft);
-  border-color:var(--accent-line);
-  color:var(--accent-ink);
+  background:var(--accent-ink);
+  border-color:var(--accent-ink);
 }
 .wrow-btn[aria-expanded="true"]{
-  background:var(--accent-soft);
-  border-color:var(--accent-line);
-  color:var(--accent-ink);
+  background:var(--accent-ink);
+  border-color:var(--accent-ink);
 }
 .wrow-btn .ar{font-size:9px;transition:transform .35s ease}
 .wrow-btn[aria-expanded="true"] .ar{transform:rotate(180deg)}
@@ -579,8 +567,8 @@ h1{
 }
 .ab-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:start}
 #lab .ab-2col{align-items:stretch}
-#lab .fig-cert{aspect-ratio:4/5;min-height:320px}
-.fig-cert{aspect-ratio:4/5}
+#lab .fig-cert{aspect-ratio:4/3;min-height:320px}
+.fig-cert{aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line);border-radius:var(--radius)}
 
 .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px 56px;margin-top:8px}
 .why-col{display:grid;gap:32px}
@@ -727,41 +715,41 @@ h1{
 /* =====================================================================
    КОНТАКТЫ (компактно)
    ===================================================================== */
-#contacts{padding:clamp(36px,4vw,52px) 0}
-#contacts .sec-head{margin-bottom:24px}
-.con-list{display:grid;grid-template-columns:1fr 1fr;gap:24px 48px;padding-top:22px;max-width:960px}
-.con-item{display:grid;grid-template-columns:130px 1fr;gap:20px;align-items:baseline}
+#contacts{padding:clamp(28px,3.5vw,44px) 0}
+#contacts .sec-head{margin-bottom:18px}
+.con-list{display:grid;grid-template-columns:1fr 1fr;gap:18px 40px;padding-top:16px;max-width:920px}
+.con-item{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:baseline}
 .con-item .k{
   font-family:var(--font-mono);
-  font-size:11px;
-  letter-spacing:.2em;
+  font-size:10.5px;
+  letter-spacing:.18em;
   text-transform:uppercase;
   color:var(--muted);
 }
-.con-item .v{font-size:16px;font-weight:500;color:var(--ink)}
+.con-item .v{font-size:15px;font-weight:500;color:var(--ink)}
 .con-item .v a{border-bottom:1px solid var(--line-strong);transition:color .2s ease,border-color .2s ease}
 .con-item .v a:hover{color:var(--accent-ink);border-color:var(--accent)}
-.con-sub{display:block;font-family:var(--font-body);font-size:14px;color:var(--muted);margin-top:8px;letter-spacing:0;text-transform:none}
+.con-sub{display:block;font-family:var(--font-body);font-size:13px;color:var(--muted);margin-top:6px;letter-spacing:0;text-transform:none}
 
 /* =====================================================================
-   ПОДВАЛ (зелёный фон = акцент)
+   ПОДВАЛ (зелёный фон = акцент, компактно)
    ===================================================================== */
 footer{background:var(--footer-bg);color:var(--footer-ink)}
-.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:56px 40px;padding:56px 0 40px}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px 32px;padding:40px 0 28px}
 .foot-brand .brand-text strong{font-size:20px;color:var(--footer-ink)}
 .foot-brand .brand-text small{color:var(--footer-muted)}
-.foot-brand .logo-slot{border-color:var(--footer-line);background:transparent;color:var(--footer-muted)}
-.foot-acc{margin-top:28px;font-size:14px;line-height:1.8;color:var(--footer-muted);max-width:52ch}
+.foot-brand .logo-slot{border:0;background:transparent;color:var(--footer-muted)}
+.foot-acc{margin-top:20px;font-size:14px;line-height:1.8;color:var(--footer-muted);max-width:52ch}
 .foot-acc a{color:var(--footer-ink);border-bottom:1px solid var(--footer-line);transition:color .2s ease,border-color .2s ease}
 .foot-acc a:hover{color:var(--footer-accent);border-color:var(--footer-accent)}
 .foot-acc b{color:var(--footer-accent);font-weight:600}
-.foot-copy{margin-top:18px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--footer-muted)}
-.fcol h4{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--footer-accent);margin-bottom:22px}
-.fcol li{margin-bottom:12px}
+.foot-copy{margin-top:14px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--footer-muted)}
+.fcol h4{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--footer-accent);margin-bottom:18px}
+.fcol li{margin-bottom:10px}
 .fcol a{font-size:15px;color:var(--footer-muted);transition:color .2s ease,padding-left .25s ease}
 .fcol a:hover{color:var(--footer-ink);padding-left:6px}
-.fcol .mono{font-size:14px;color:var(--footer-muted);display:block;margin-bottom:12px}
-.foot-bot{border-top:1px solid var(--footer-line);padding:20px 0;display:flex;justify-content:flex-end}
+.fcol .mono{font-size:14px;color:var(--footer-muted);display:block;margin-bottom:10px}
+.foot-bot{border-top:1px solid var(--footer-line);padding:16px 0;display:flex;justify-content:flex-end}
 .foot-bot a{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--footer-muted);transition:color .2s ease}
 .foot-bot a:hover{color:var(--footer-accent)}
 
@@ -770,13 +758,14 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
    ===================================================================== */
 @media (max-width:1080px){
   .hero-grid{grid-template-columns:1fr;gap:48px}
+  .hero-img{aspect-ratio:3/2;max-width:520px;margin:0 auto}
   .ab-2col{grid-template-columns:1fr;gap:36px}
   .fig-cert{max-width:360px}
-  .foot-grid{grid-template-columns:1fr 1fr;gap:40px 32px}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:32px 24px}
   .svc-grid{grid-template-columns:1fr 1fr;gap:16px}
   .ind-grid{grid-template-columns:1fr;gap:36px}
   .ind-scroll .c-range{width:190px}
-  .ind-photo{aspect-ratio:3/4;min-height:0;height:auto;max-width:440px;margin:0 auto}
+  .ind-photo{aspect-ratio:3/4;max-width:440px;margin:0 auto}
   .work-cols{grid-template-columns:1fr;gap:28px}
   .status-stats{grid-template-columns:1fr 1fr;gap:14px}
   .steps{grid-template-columns:1fr 1fr;gap:28px}
@@ -831,10 +820,10 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   }
   .burger{display:flex}
   .svc-grid{grid-template-columns:1fr}
-  .con-list{grid-template-columns:1fr;gap:20px}
-  .foot-grid{grid-template-columns:1fr;gap:36px}
-  .sec{padding:32px 0}
-  .sec-head{margin-bottom:30px;grid-template-columns:1fr}
+  .con-list{grid-template-columns:1fr;gap:16px}
+  .foot-grid{grid-template-columns:1fr;gap:32px}
+  .sec{padding:30px 0}
+  .sec-head{margin-bottom:28px;grid-template-columns:1fr}
   .about-list{gap:12px}
   .ab{padding:26px 22px}
   .co-block{margin-top:24px}
@@ -844,7 +833,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 
 @media (max-width:640px){
   .wrow-main{flex-basis:100%}
-  .con-item{grid-template-columns:1fr;gap:8px}
+  .con-item{grid-template-columns:1fr;gap:6px}
   .status-stats{grid-template-columns:1fr 1fr;gap:12px}
   .steps{grid-template-columns:1fr}
 }
@@ -884,8 +873,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   <div class="wrap mast-in">
     <a class="brand" href="#top" aria-label="АналитЭко — на главную">
       <span class="logo-slot" title="Место для логотипа">
-        <!-- ▼ МЕСТО ДЛЯ ЛОГОТИПА: <img src="путь/к/логотипу.svg" alt="АналитЭко"> -->
-        <span class="logo-ph mono">Лого</span>
+        <img src="logo.jpeg" alt="АналитЭко">
       </span>
     </a>
     <nav class="main-nav" id="main-nav" aria-label="Основная навигация">
@@ -938,24 +926,13 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   <div class="wrap hero-grid">
     <div>
       <h1 id="h-main">КОМПЛЕКСНЫЙ МОНИТОРИНГ ВОЗДУХА И ВЫБРОСОВ</h1>
-      <p class="lead rv" style="--d:.1s">Проводим точные измерения атмосферного воздуха и промышленных выбросов.</p>
+      <p class="lead rv" style="--d:.1s">Проводим точные измерения атмосферного воздуха и промышленных выбросов. Работаем строго по методикам. Выдаем официальные протоколы, которые точно примут контролирующие органы.</p>
       <div class="hero-cta rv" style="--d:.2s">
         <a class="btn btn-primary" href="#contacts">Рассчитать стоимость <span class="ar">→</span></a>
         <a class="btn" href="#research">Все услуги <span class="ar">→</span></a>
       </div>
     </div>
-    <!-- ▼ МЕСТО ДЛЯ ИЗОБРАЖЕНИЯ: <img src="путь/к/картинке.jpg" alt="..."> -->
-    <figure class="hero-fig rv" style="--d:.18s">
-      <div class="fig-slot">
-        <svg class="fig-ic" viewBox="0 0 48 48" aria-hidden="true">
-          <rect x="6" y="8" width="36" height="28" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <circle cx="17" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M6 34l10-9 8 7 7-6 11 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        </svg>
-        <span class="mono fig-label">Место для изображения</span>
-        <span class="mono fig-size">640 × 560</span>
-      </div>
-    </figure>
+    <img class="hero-img rv" style="--d:.18s" src="foto1.jpeg" alt="АналитЭко: экоаналитическая лаборатория">
   </div>
 </section>
 
@@ -1106,19 +1083,9 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     <div class="ab-2col rv">
       <div class="ab-text" style="max-width:none">
         <h4 class="ab-sub">Аккредитованная экоаналитическая лаборатория</h4>
-        <p>Экоаналитическая лаборатория осуществляет комплексные исследования атмосферного воздуха, промышленных выбросов и шума различного уровня сложности.</p>
+        <p>Экоаналитическая лаборатория осуществляет комплексные исследования атмосферного воздуха, промышленных выбросов и шума различного уровня сложности. Также лаборатория обеспечивает реализацию аналитической составляющей научно-прикладных исследований в области экологии. Квалифицированные сотрудники и высокоточное оборудование позволяют быть уверенными в высоком качестве и достоверности полученных результатов. Экоаналитическая лаборатория аккредитована национальным органом по аккредитации – Федеральной службой по аккредитации. Уникальный номер записи об аккредитации в реестре аккредитованных лиц <b>RA.RU.21СО07</b>.</p>
       </div>
-      <!-- ▼ МЕСТО ДЛЯ ИЗОБРАЖЕНИЯ: аттестат аккредитации <img src="путь/к/аттестату.jpg" alt="Аттестат аккредитации"> -->
-      <figure class="fig-slot fig-cert rv" style="--d:.1s">
-        <svg class="fig-ic" viewBox="0 0 48 48" aria-hidden="true">
-          <rect x="8" y="6" width="32" height="36" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <line x1="14" y1="14" x2="34" y2="14" stroke="currentColor" stroke-width="1.5"/>
-          <line x1="14" y1="20" x2="34" y2="20" stroke="currentColor" stroke-width="1.5"/>
-          <line x1="14" y1="26" x2="27" y2="26" stroke="currentColor" stroke-width="1.5"/>
-          <circle cx="30" cy="34" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/>
-        </svg>
-        <span class="mono fig-label">Аттестат аккредитации</span>
-      </figure>
+      <img class="fig-cert rv" style="--d:.1s" src="attestat.png" alt="Аттестат аккредитации лаборатории">
     </div>
     <div class="status-stats rv" style="--d:.1s">
       <div class="ss"><b data-count="100">0</b><span>показателей в области аккредитации</span></div>
@@ -1144,7 +1111,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Анализ атмосферного воздуха</h3>
-            <p class="wrow-desc">Мы проводим комплексные исследования</p>
+            <p class="wrow-desc">Мы проводим комплексные исследования, чтобы объективно оценить состояние воздуха вокруг вашего объекта: выявить загрязняющие вещества, сопоставить их концентрацию с нормативами и дать базу для управленческих решений.</p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-air-1">Подробнее <span class="ar">▾</span></button>
         </div>
@@ -1152,7 +1119,10 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <div class="wrow-panel-in">
             <div class="wrow-body">
               <p class="wrow-label">Что мы делаем:</p>
-              <p class="wrow-text">Планируем исследование. Вместе с вами определяем точки отбора</p>
+              <p class="wrow-text">1. <b>Планируем исследование.</b> Вместе с вами определяем точки отбора (на границе санитарно-защитной зоны, в жилой застройке, в зонах влияния конкретных источников), подбираем перечень контролируемых показателей (оксиды азота и серы, углеводороды, формальдегид, ЛОС, взвешенные частицы и др.) с учётом специфики вашего производства.</p>
+              <p class="wrow-text">2. <b>Выполняем отбор проб.</b> Специалисты выезжают на объект, отбирают пробы с соблюдением всех нормативных требований и одновременно измеряют метеорологические условия (температуру, влажность, давление, скорость и направление ветра) - они напрямую влияют на рассеивание загрязнений и являются основой для интерпритации результатов измерений.</p>
+              <p class="wrow-text">3. <b>Проводим лабораторные исследования.</b> В лаборатории анализируем пробы современными методами, чтобы точно определить концентрации веществ.</p>
+              <p class="wrow-text">4. <b>Анализируем и оформляем результат.</b> Сравниваем полученные данные с предельно допустимыми концентрациями (ПДК). По итогам формируем официальный протокол, который регистрируем во ФГИС Росаккредитации — это гарантирует юридическую силу документа.</p>
             </div>
           </div>
         </div>
@@ -1162,7 +1132,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Измерения шума на границе СЗЗ</h3>
-            <p class="wrow-desc">Мы проводим инструментальные исследования</p>
+            <p class="wrow-desc">Мы проводим инструментальные исследования, чтобы объективно оценить акустическое воздействие вашего объекта на прилегающие территории. Главная задача — получить достоверные данные о фактических уровнях шума и проверить, соблюдаются ли на границе санитарно-защитной зоны установленные санитарные нормативы.</p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-air-2">Подробнее <span class="ar">▾</span></button>
         </div>
@@ -1170,7 +1140,14 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <div class="wrow-panel-in">
             <div class="wrow-body">
               <p class="wrow-label">Что входит в работу:</p>
-              <p class="wrow-text">Планирование. Вместе с вами анализируем проект СЗЗ</p>
+              <p class="wrow-text">1. <b>Планирование.</b> Вместе с вами анализируем проект СЗЗ, программу производственного экологического контроля (ПЭК) или техническое задание. Определяем контрольные точки с учётом расположения источников шума (оборудование, вентиляция, логистика) и ближайшей жилой застройки. Учитываем направление преобладающих ветров, рельеф и другие факторы, влияющие на распространение звука.</p>
+              <p class="wrow-text">2. <b>Подготовка и выезд.</b> Используем поверенные шумомеры 1 класса точности. Перед измерениями проводим калибровку оборудования. На месте фиксируем метеорологические условия (температуру, скорость и направление ветра, наличие осадков) — они напрямую влияют на результат.</p>
+              <p class="wrow-text">3. <b>Проведение измерений.</b> Оцениваем разные характеристики шума:</p>
+              <p class="wrow-text">Эквивалентный уровень — средний за оценочный период (отдельно для дневного и ночного времени).</p>
+              <p class="wrow-text">Максимальный уровень — фиксируем пики и их длительность, отмечаем импульсные события (например, работу компрессоров, погрузку), чтобы понять реальный раздражающий эффект.</p>
+              <p class="wrow-text">Спектральный состав — проводим октавный анализ, выявляем тональные компоненты. Это критически важно не только для проверки норм, но и для подбора эффективных мер шумозащиты.</p>
+              <p class="wrow-text">4. <b>Фоновая корректировка.</b> Ключевой момент: мы отделяем вклад именно вашего источника от постороннего шума (транспорт, соседний объект), чтобы картина была объективной.</p>
+              <p class="wrow-text">5. <b>Документирование.</b> В протокол вносим все детали: место и время измерений, параметры оборудования, условия среды, характер шума.</p>
             </div>
           </div>
         </div>
@@ -1195,19 +1172,260 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
                 <td><span class="ind-name">Азота оксид</span><span class="ind-sub">Азот (II) оксид (Азот монооксид)</span></td>
                 <td class="ind-ranges"><span>(0,036 – 2,5) мг/м³</span></td>
               </tr>
+              <tr>
+                <td>0303</td>
+                <td><span class="ind-name">Аммиак</span><span class="ind-sub">Аммиак (Азота гидрид)</span></td>
+                <td class="ind-ranges"><span>(0,024 – 10) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1401</td>
+                <td><span class="ind-name">Ацетон</span><span class="ind-sub">Пропан-2-он (Диметилкетон; диметилформальдегид)</span></td>
+                <td class="ind-ranges"><span>(0,21 – 100) мг/м³</span><span>(0,08 – 1100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0330</td>
+                <td><span class="ind-name">Диоксид серы</span><span class="ind-sub">Сера диоксид</span></td>
+                <td class="ind-ranges"><span>(0,03 – 5,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0123</td>
+                <td><span class="ind-name">Дижелезо триоксид</span><span class="ind-sub">диЖелезо триоксид, (железа оксид, железо сесквиоксид)/в пересчете на железо</span></td>
+                <td class="ind-ranges"><span>(0,02 – 3,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0337</td>
+                <td><span class="ind-name">Оксид углерода</span><span class="ind-sub">Углерода оксид (Углерод окись; углерод моноокись; угарный газ)</span></td>
+                <td class="ind-ranges"><span>(1,8 – 10) мг/м³</span><span>(2,4 – 50) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0333</td>
+                <td><span class="ind-name">Сероводород</span><span class="ind-sub">Дигидросульфид (Водород сернистый, дигидросульфид, гидросульфид)</span></td>
+                <td class="ind-ranges"><span>(0,0048 – 5,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0184</td>
+                <td><span class="ind-name">Свинец и его неорганические соединения</span><span class="ind-sub">Свинец и его неорганические соединения/в пересчете на свинец/ (Свинец)</span></td>
+                <td class="ind-ranges"><span>(0,00018 – 0,025) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2902</td>
+                <td><span class="ind-name">Пыль (взвешенные вещества)</span><span class="ind-sub">Взвешенные вещества</span></td>
+                <td class="ind-ranges"><span>(0,09 – 1,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2908</td>
+                <td><span class="ind-name">Пыль (20–70% SiO₂)</span><span class="ind-sub">Пыль неорганическая, содержащая двуокись кремния, в %: - 70-20 (шамот, цемент, пыль цементного производства - глина, глинистый сланец, доменный шлак, песок, клинкер, зола кремнезем и другие), Пыль неорганическая с содержанием кремния менее 20, 20 - 70, а также более 70 процентов</span></td>
+                <td class="ind-ranges"><span>(0,06 – 1,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2907</td>
+                <td><span class="ind-name">Пыль (SiO₂ &gt; 70%)</span><span class="ind-sub">Пыль неорганическая, содержащая двуокись кремния, в %: -более 70 (динас и другие), Пыль неорганическая с содержанием кремния менее 20, 20 - 70, а также более 70 процентов</span></td>
+                <td class="ind-ranges"><span>(0,03 – 1,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2937</td>
+                <td><span class="ind-name">Пыль зерновая</span><span class="ind-sub">Пыль зерновая: - по массе, Взвешенные вещества (разнородные по составу твердые частицы, содержащиеся в выбросах загрязняющих веществ и не поименованные в настоящем разделе)</span></td>
+                <td class="ind-ranges"><span>(0,09 – 2,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2926</td>
+                <td><span class="ind-name">Зола (угольная)</span><span class="ind-sub">Угольная зола теплоэлектростанций (с содержанием окиси кальция 35-40%, дисперсностью до 3 мкм и ниже не менее 97%), Зола твердого топлива</span></td>
+                <td class="ind-ranges"><span>(0,012 – 2,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0349</td>
+                <td><span class="ind-name">Хлор</span><span class="ind-sub">Хлор</span></td>
+                <td class="ind-ranges"><span>(0,018 – 0,5) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0322</td>
+                <td><span class="ind-name">Серная кислота</span><span class="ind-sub">Серная кислота (по молекуле H₂SO₄)</span></td>
+                <td class="ind-ranges"><span>(0,06 – 0,5) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0410</td>
+                <td><span class="ind-name">Метан</span><span class="ind-sub">Метан</span></td>
+                <td class="ind-ranges"><span>(30 – 3500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0415</td>
+                <td><span class="ind-name">Углеводороды предельные C1–C5 (по метану)</span><span class="ind-sub">Смесь предельных углеводородов C1H4 - C5H12, Углеводороды предельные C₁-C₅ (смесь предельных углеводородов C₁H₄ - C₅H₁₂) (исключая метан)</span></td>
+                <td class="ind-ranges"><span>(30 – 3500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0416</td>
+                <td><span class="ind-name">Углеводороды предельные C6–C10 (по гексану)</span><span class="ind-sub">Смесь предельных углеводородов C6H14 - C10H22, Углеводороды предельные C₆-C₁₀ (смесь предельных углеводородов C₆H₁₄ - C₁₀H₂₂)</span></td>
+                <td class="ind-ranges"><span>(36 – 150) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0403</td>
+                <td><span class="ind-name">Гексан</span><span class="ind-sub">Гексан (н-Гексан; дипропил; Hexane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Гептан</span><span class="ind-sub">н-гептан (heptane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Декан</span><span class="ind-sub">н-декан (decane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Нонан</span><span class="ind-sub">н-нонан (nonane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Октан</span><span class="ind-sub">н-октан (octane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2754</td>
+                <td><span class="ind-name">Углеводороды предельные C12–C19 (в пересчете на сольвент нафта)</span><span class="ind-sub">Алканы C12-19 (в пересчете на C), Углеводороды предельные C₁₂-C₁₉ (растворители РПК-240, РПК-280)</span></td>
+                <td class="ind-ranges"><span>(0,6 – 50) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0602</td>
+                <td><span class="ind-name">Бензол</span><span class="ind-sub">Бензол (Циклогексатриен; фенилгидрид)</span></td>
+                <td class="ind-ranges"><span>(0,06 – 2,5) мг/м³</span><span>(0,007 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0616</td>
+                <td><span class="ind-name">Диметилбензол (смесь о-, м-, п- изомеров) (Метилтолуол)</span><span class="ind-sub">Диметилбензол (ксилол) (смесь о-, м-, п- изомеров (метилтолуол))</span></td>
+                <td class="ind-ranges"><span>(0,12 – 25,0) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0644</td>
+                <td><span class="ind-name">м-Ксилол</span><span class="ind-sub">1,3-Диметилбензол (3-метилтолуол; 3-ксилол; 1,3-ксилол), Диметилбензол (ксилол) (смесь о-, м-, п- изомеров (метилтолуол))</span></td>
+                <td class="ind-ranges"><span>(0,03 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0639</td>
+                <td><span class="ind-name">о-Ксилол</span><span class="ind-sub">1,2-Диметилбензол (Метилтолуол; 1,2-ксилол), Диметилбензол (ксилол) (смесь о-, м-, п- изомеров (метилтолуол))</span></td>
+                <td class="ind-ranges"><span>(0,03 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0640</td>
+                <td><span class="ind-name">п-Ксилол</span><span class="ind-sub">1,4-Диметилбензол (4-Метилтолуол), Диметилбензол (ксилол) (смесь о-, м-, п- изомеров (метилтолуол))</span></td>
+                <td class="ind-ranges"><span>(0,03 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0621</td>
+                <td><span class="ind-name">Толуол</span><span class="ind-sub">Метилбензол (Фенилметан)</span></td>
+                <td class="ind-ranges"><span>(0,36 – 25,0) мг/м³</span><span>(0,01 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0627</td>
+                <td><span class="ind-name">Этилбензол</span><span class="ind-sub">Этилбензол (Фенилэтан)</span></td>
+                <td class="ind-ranges"><span>(0,010 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0620</td>
+                <td><span class="ind-name">Стирол</span><span class="ind-sub">Этенилбензол (Винилбензол; фенилэтилен)</span></td>
+                <td class="ind-ranges"><span>(0,02 – 4000) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2732</td>
+                <td><span class="ind-name">Керосин</span><span class="ind-sub">Керосин (Керосин прямой перегонки; керосин дезодорированный)</span></td>
+                <td class="ind-ranges"><span>(0,6 – 150) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2735</td>
+                <td><span class="ind-name">Масло минеральное</span><span class="ind-sub">Минеральное масло (масло минеральное нефтяное): веретенное, машинное, цилиндровое и иные</span></td>
+                <td class="ind-ranges"><span>(0,03 – 2,5) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1715</td>
+                <td><span class="ind-name">Метилмеркаптан</span><span class="ind-sub">Метантиол (метилмеркаптан)</span></td>
+                <td class="ind-ranges"><span>(0,003 – 0,4) мг/м³</span><span>(0,003 – 110) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1728</td>
+                <td><span class="ind-name">Этилмеркаптан</span><span class="ind-sub">Этантиол (Меркаптоэтан; этилсульфгидрат; этилгидросульфид; тиоэтиловый спирт; тиоэтанол)</span></td>
+                <td class="ind-ranges"><span>(0,000025 – 0,5) мг/м³</span><span>(0,005 – 110) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2001</td>
+                <td><span class="ind-name">Акрилонитрил</span><span class="ind-sub">Проп-2-еннитрил (Акрилонитрил; винил цианистый; нитрил акриловой кислоты; цианоэтилен; винилцианид)</span></td>
+                <td class="ind-ranges"><span>(0,015 – 0,25) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1301</td>
+                <td><span class="ind-name">Акролеин</span><span class="ind-sub">Проп-2-ен-1-аль (Акрилальдегид; акриловый альдегид; альдегид акриловой кислоты; проп-2-ен-1-аль)</span></td>
+                <td class="ind-ranges"><span>(0,02 – 60) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1317</td>
+                <td><span class="ind-name">Ацетальдегид</span><span class="ind-sub">Ацетальдегид (Уксусный альдегид)</span></td>
+                <td class="ind-ranges"><span>(0,008 – 100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1206</td>
+                <td><span class="ind-name">Бутилакрилат</span><span class="ind-sub">Бутилпроп-2-еноат (Бутиловый эфир акриловой кислоты; бутилпропеноат; бутиловый эфир пропеновой кислоты)</span></td>
+                <td class="ind-ranges"><span>(0,0037 – 5,0) мг/м³</span><span>(0,08 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1210</td>
+                <td><span class="ind-name">Бутилацетат</span><span class="ind-sub">Бутилацетат (Бутиловый эфир уксусной кислоты)</span></td>
+                <td class="ind-ranges"><span>(0,08 – 800) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1314</td>
+                <td><span class="ind-name">Пропаналь</span><span class="ind-sub">Пропаналь (Пропиональдегид, метилацетальдегид)</span></td>
+                <td class="ind-ranges"><span>(0,008 – 100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1078</td>
+                <td><span class="ind-name">Этиленгликоль</span><span class="ind-sub">Этан-1,2-диол (1,2-Дигидроксиэтан; гликоль; этилен дигидрат; 2-гидроксиэтанол)</span></td>
+                <td class="ind-ranges"><span>(0,5 – 2,5) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1119</td>
+                <td><span class="ind-name">Этилцеллозольв</span><span class="ind-sub">2-Этоксиэтанол (2-Этоксиэтиловый эфир; моноэтиловый эфир этиленгликоля; этокси-2-этанол)</span></td>
+                <td class="ind-ranges"><span>(0,2 – 130) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1240</td>
+                <td><span class="ind-name">Этилацетат</span><span class="ind-sub">Этилацетат (Этиловый эфир уксусной кислоты)</span></td>
+                <td class="ind-ranges"><span>(0,08 – 800) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1042</td>
+                <td><span class="ind-name">Бутиловый спирт</span><span class="ind-sub">Бутан-1-ол (Бутиловый спирт)</span></td>
+                <td class="ind-ranges"><span>(0,07 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1054</td>
+                <td><span class="ind-name">Спирт пропиловый</span><span class="ind-sub">Пропан-1-ол (Этилкарбинол; 1-оксипропан; пропанол-1; 1-пропанол; н-пропанол; н-пропан-1-ол; 1-гидроксипропан; н-пропиловый спирт)</span></td>
+                <td class="ind-ranges"><span>(0,05 – 100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1052</td>
+                <td><span class="ind-name">Метанол</span><span class="ind-sub">Спирт метиловый (Карбинол; метиловый спирт; метилгидроксид; моногидроксиметан)</span></td>
+                <td class="ind-ranges"><span>(0,25 – 2,5) мг/м³</span><span>(0,05 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1061</td>
+                <td><span class="ind-name">Этиловый спирт</span><span class="ind-sub">Этанол (Этиловый спирт; метилкарбинол)</span></td>
+                <td class="ind-ranges"><span>(0,5 – 3000) мг/м³</span></td>
+              </tr>
+              <tr><td>—</td><td><span class="ind-name">Температура воздуха</span></td><td class="ind-ranges"><span>(от −45 до 60) °С</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Относительная влажность воздуха</span></td><td class="ind-ranges"><span>(0 – 100) %</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Атмосферное давление</span></td><td class="ind-ranges"><span>(84 – 108) кПа</span><span>(630 – 810) мм рт.ст.</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Скорость ветра</span></td><td class="ind-ranges"><span>(1,0 – 60) м/с</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Направление ветра</span></td><td class="ind-ranges"><span>(0 – 360)°</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Уровень звука</span></td><td class="ind-ranges"><span>(20 – 140) дБ</span><span>(20 – 140) дБА</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Уровни звукового давления в октавных полосах со среднегеометрическими частотами в диапазоне 31,5 до 8000 Гц</span></td><td class="ind-ranges"><span>(20 – 140) дБ</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Эквивалентный уровень звукового давления</span></td><td class="ind-ranges"><span>(20 – 140) дБ</span><span>(20 – 140) дБА</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Максимальный уровень звукового давления</span></td><td class="ind-ranges"><span>(20 – 140) дБ</span><span>(20 – 140) дБА</span></td></tr>
             </tbody>
           </table>
         </div>
       </div>
-      <!-- ▼ МЕСТО ДЛЯ ФОТО: <img src="путь/к/фото.jpg" alt="..."> -->
-      <figure class="fig-slot ind-photo rv" style="--d:.1s">
-        <svg class="fig-ic" viewBox="0 0 48 48" aria-hidden="true">
-          <rect x="6" y="8" width="36" height="28" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <circle cx="17" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M6 34l10-9 8 7 7-6 11 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        </svg>
-        <span class="mono fig-label">Место для фото</span>
-      </figure>
+      <img class="ind-photo rv" style="--d:.1s" src="foto2.jpeg" alt="Измерения атмосферного воздуха">
     </div>
 
     <div class="cta-col rv" style="--d:.15s">
@@ -1232,7 +1450,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Контроль промышленных выбросов: точность, которая защищает от рисков</h3>
-            <p class="wrow-desc">Мы помогаем предприятиям точно оценивать состав и объём выбросов</p>
+            <p class="wrow-desc">Мы помогаем предприятиям точно оценивать состав и объём выбросов, чтобы соблюдать нормативы, снижать экологические риски и уверенно проходить проверки.</p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-em-1">Подробнее <span class="ar">▾</span></button>
         </div>
@@ -1240,7 +1458,12 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <div class="wrow-panel-in">
             <div class="wrow-body">
               <p class="wrow-label">Что входит в работу:</p>
-              <p class="wrow-text">Изучаем специфику производства</p>
+              <p class="wrow-text">1. Изучаем специфику производства, помогаем определить какие источники нужно контролировать.</p>
+              <p class="wrow-text">2. Проводим отбор проб с соблюдением методик и измеряем аэродинамические параметры (температуру, скорость, давление потока).</p>
+              <p class="wrow-text">3. Анализируем концентрации загрязняющих веществ (оксиды азота и серы, оксид углерода, взвешенные вещества, ЛОС и другие) инструментальными, инструментально-лабораторными или расчётными методами — выбираем оптимальный под задачу.</p>
+              <p class="wrow-text">4. Сопоставляем результаты с нормативами НДВ (ПДВ) и формируем выводы.</p>
+              <p class="wrow-text">5. Готовим полный пакет: протоколы испытаний, акты отбора, при необходимости — рекомендации по корректировке технологических процессов.</p>
+              
             </div>
           </div>
         </div>
@@ -1250,7 +1473,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Определение эффективности работы газоочистных установок (ГОУ): подтвердим результат цифрами</h3>
-            <p class="wrow-desc">Мы помогаем предприятиям объективно оценить</p>
+            <p class="wrow-desc">Мы помогаем предприятиям объективно оценить, насколько реально работают газоочистные установки - чтобы вы могли подтвердить их эффективность для надзорных органов, оптимизировать затраты и снизить экологические риски.</p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-em-2">Подробнее <span class="ar">▾</span></button>
         </div>
@@ -1258,7 +1481,11 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <div class="wrow-panel-in">
             <div class="wrow-body">
               <p class="wrow-label">Что делаем:</p>
-              <p class="wrow-text">Проводим инструментальные замеры до и после ГОУ</p>
+              <p class="wrow-text">1. Проводим инструментальные замеры до и после ГОУ: измеряем аэродинамические параметры (скорость, температуру, давление потока) и концентрации загрязняющих веществ.</p>
+              <p class="wrow-text">2. Рассчитываем степень очистки: определяем фактическую эффективность установки в процентах и сопоставляем с проектными и нормативными значениями.</p>
+              <p class="wrow-text">3. Оцениваем стабильность работы в разных режимах: проверяем, как меняется эффективность при колебаниях нагрузки, температуры и состава выбросов — это важно для понимания реальной картины, а не «идеальных» условий.</p>
+              <p class="wrow-text">4. Выявляем узкие места: определяем, где происходят проскоки загрязняющих веществ, есть ли неравномерность поля скоростей, отклонения от проектных параметров или необходимость замены фильтрующих элементов.</p>
+              <p class="wrow-text">5. Готовим полный пакет документов: протоколы измерений, акты отбора проб, акты оценки эффективности, при необходимости - рекомендации по корректировке режимов или обслуживания установок.</p>
             </div>
           </div>
         </div>
@@ -1268,7 +1495,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Обследование источников выбросов</h3>
-            <p class="wrow-desc">Мы помогаем понять где и каким образом нужно оборудовать</p>
+            <p class="wrow-desc">Мы помогаем понять где и каким образом нужно оборудовать точки отбора проб в соответствии с установленным в НПА, ГОСТ и ПНД Ф требованиями.</p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-em-3">Подробнее <span class="ar">▾</span></button>
         </div>
@@ -1276,7 +1503,10 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <div class="wrow-panel-in">
             <div class="wrow-body">
               <p class="wrow-label">Что входит в работу:</p>
-              <p class="wrow-text">Анализ документации.</p>
+              <p class="wrow-text">1. <b>Анализ документации.</b> Проводим изучение исходных данных, результатов инвентаризации, методик отбора проб и методик измерений.</p>
+              <p class="wrow-text">2. <b>Выезд и инструментальное обследование.</b> Проводим визуальный осмотр газоходов источников, измеряем длины прямых участков до и после места отбора проб для проверки соблюдения требований ГОСТ и НД. Проверяем наличие, диаметры, герметичность и правильность расположения штуцеров или отверстий. При необходимости проводим предварительные измерения  параметров ГВС: скорости, температуры, давления и влажности газовоздушной смеси.</p>
+              <p class="wrow-text">3. <b>Документирование.</b> Проводим расчет места расположения и количества точек измерения в сечении газохода. Оцениваем распределение поля скоростей и направления потока газа в месте отбора (отсутствие завихрений и обратных токов).</p>
+              <p class="wrow-text">4. <b>Оформление результатов.</b> Составляем итоговый документ, подробно описывающий характеристики обследованных источников, в котором указывается на соответствие мест отбора нормативным требованиям, либо приводятся рекомендации и технические решения по приведению точек контроля в нормативное состояние (схемы оборудования или переноса точек отбора).</p>
             </div>
           </div>
         </div>
@@ -1301,19 +1531,191 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
                 <td><span class="ind-name">Азота оксид</span><span class="ind-sub">Азот (II) оксид (Азот монооксид)</span></td>
                 <td class="ind-ranges"><span>(25 – 2000) мг/м³</span></td>
               </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Сумма оксидов азота (на NO₂)</span></td>
+                <td class="ind-ranges"><span>(40 – 3550) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1401</td>
+                <td><span class="ind-name">Ацетон</span><span class="ind-sub">Пропан-2-он (Диметилкетон; диметилформальдегид)</span></td>
+                <td class="ind-ranges"><span>(0,08 – 1100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0330</td>
+                <td><span class="ind-name">Диоксид серы</span><span class="ind-sub">Сера диоксид</span></td>
+                <td class="ind-ranges"><span>(75 – 5000) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Кислород</span></td>
+                <td class="ind-ranges"><span>(1,0 – 25) %</span></td>
+              </tr>
+              <tr>
+                <td>0337</td>
+                <td><span class="ind-name">Оксид углерода</span><span class="ind-sub">Углерода оксид (Углерод окись; углерод моноокись; угарный газ)</span></td>
+                <td class="ind-ranges"><span>(30 – 5000) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0333</td>
+                <td><span class="ind-name">Сероводород</span><span class="ind-sub">Дигидросульфид (Водород сернистый, дигидросульфид, гидросульфид)</span></td>
+                <td class="ind-ranges"><span>(25 – 500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>2902</td>
+                <td><span class="ind-name">Пыль (взвешенные вещества)</span><span class="ind-sub">Взвешенные вещества</span></td>
+                <td class="ind-ranges"><span>(1,0 – 100000) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0328</td>
+                <td><span class="ind-name">Сажа (углерод)</span><span class="ind-sub">Углерод (пигмент черный или углеродсодержащий аэрозоль (сажа))</span></td>
+                <td class="ind-ranges"><span>(1,0 – 50000) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0403</td>
+                <td><span class="ind-name">Гексан</span><span class="ind-sub">Гексан (н-Гексан; дипропил; Hexane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Гептан</span><span class="ind-sub">н-гептан (heptane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Декан</span><span class="ind-sub">н-декан (decane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Нонан</span><span class="ind-sub">н-нонан (nonane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td><span class="ind-name">Октан</span><span class="ind-sub">н-октан (octane)/ Углеводороды предельные C₆-C₁₀</span></td>
+                <td class="ind-ranges"><span>(1,0 – 1500) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0602</td>
+                <td><span class="ind-name">Бензол</span><span class="ind-sub">Бензол (Циклогексатриен; фенилгидрид)</span></td>
+                <td class="ind-ranges"><span>(0,007 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0644</td>
+                <td><span class="ind-name">м-Ксилол</span><span class="ind-sub">1,3-Диметилбензол (3-метилтолуол; 3-ксилол; 1,3-ксилол), Диметилбензол (ксилол) (смесь о-, м-, п- изомеров (метилтолуол))</span></td>
+                <td class="ind-ranges"><span>(0,03 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0639</td>
+                <td><span class="ind-name">о-Ксилол</span><span class="ind-sub">1,2-Диметилбензол (Метилтолуол; 1,2-ксилол), Диметилбензол (ксилол) (смесь о-, м-, п- изомеров (метилтолуол))</span></td>
+                <td class="ind-ranges"><span>(0,03 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0640</td>
+                <td><span class="ind-name">п-Ксилол</span><span class="ind-sub">1,4-Диметилбензол (4-Метилтолуол), Диметилбензол (ксилол) (смесь о-, м-, п- изомеров (метилтолуол))</span></td>
+                <td class="ind-ranges"><span>(0,03 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0621</td>
+                <td><span class="ind-name">Толуол</span><span class="ind-sub">Метилбензол (Фенилметан)</span></td>
+                <td class="ind-ranges"><span>(0,03 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0627</td>
+                <td><span class="ind-name">Этилбензол</span><span class="ind-sub">Этилбензол (Фенилэтан)</span></td>
+                <td class="ind-ranges"><span>(0,010 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>0620</td>
+                <td><span class="ind-name">Стирол</span><span class="ind-sub">Этенилбензол (Винилбензол; фенилэтилен)</span></td>
+                <td class="ind-ranges"><span>(0,02 – 4000) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1715</td>
+                <td><span class="ind-name">Метилмеркаптан</span><span class="ind-sub">Метантиол (метилмеркаптан)</span></td>
+                <td class="ind-ranges"><span>(0,010 – 110) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1728</td>
+                <td><span class="ind-name">Этилмеркаптан</span><span class="ind-sub">Этантиол (Меркаптоэтан; этилсульфгидрат; этилгидросульфид; тиоэтиловый спирт; тиоэтанол)</span></td>
+                <td class="ind-ranges"><span>(0,010 – 110) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1301</td>
+                <td><span class="ind-name">Акролеин</span><span class="ind-sub">Проп-2-ен-1-аль (Акрилальдегид; акриловый альдегид; альдегид акриловой кислоты; проп-2-ен-1-аль)</span></td>
+                <td class="ind-ranges"><span>(0,02 – 60) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1317</td>
+                <td><span class="ind-name">Ацетальдегид</span><span class="ind-sub">Ацетальдегид (Уксусный альдегид)</span></td>
+                <td class="ind-ranges"><span>(0,008 – 100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1206</td>
+                <td><span class="ind-name">Бутилакрилат</span><span class="ind-sub">Бутилпроп-2-еноат (Бутиловый эфир акриловой кислоты; бутилпропеноат; бутиловый эфир пропеновой кислоты)</span></td>
+                <td class="ind-ranges"><span>(0,08 – 400) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1210</td>
+                <td><span class="ind-name">Бутилацетат</span><span class="ind-sub">Бутилацетат (Бутиловый эфир уксусной кислоты)</span></td>
+                <td class="ind-ranges"><span>(0,08 – 800) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1314</td>
+                <td><span class="ind-name">Пропаналь</span><span class="ind-sub">Пропаналь (Пропиональдегид, метилацетальдегид)</span></td>
+                <td class="ind-ranges"><span>(0,008 – 100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1119</td>
+                <td><span class="ind-name">Этилцеллозольв</span><span class="ind-sub">2-Этоксиэтанол (2-Этоксиэтиловый эфир; моноэтиловый эфир этиленгликоля; этокси-2-этанол)</span></td>
+                <td class="ind-ranges"><span>(0,2 – 130) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1240</td>
+                <td><span class="ind-name">Этилацетат</span><span class="ind-sub">Этилацетат (Этиловый эфир уксусной кислоты)</span></td>
+                <td class="ind-ranges"><span>(0,08 – 800) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1042</td>
+                <td><span class="ind-name">Бутиловый спирт</span><span class="ind-sub">Бутан-1-ол (Бутиловый спирт)</span></td>
+                <td class="ind-ranges"><span>(0,07 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1054</td>
+                <td><span class="ind-name">Спирт пропиловый</span><span class="ind-sub">Пропан-1-ол (Этилкарбинол; 1-оксипропан; пропанол-1; 1-пропанол; н-пропанол; н-пропан-1-ол; 1-гидроксипропан; н-пропиловый спирт)</span></td>
+                <td class="ind-ranges"><span>(0,05 – 100) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1052</td>
+                <td><span class="ind-name">Метанол (метиловый спирт)/ Метиловый спирт</span><span class="ind-sub">Спирт метиловый (Карбинол; метиловый спирт; метилгидроксид; моногидроксиметан)</span></td>
+                <td class="ind-ranges"><span>(0,05 – 300) мг/м³</span></td>
+              </tr>
+              <tr>
+                <td>1061</td>
+                <td><span class="ind-name">Этиловый спирт</span><span class="ind-sub">Этанол (Этиловый спирт; метилкарбинол)</span></td>
+                <td class="ind-ranges"><span>(0,5 – 3000) мг/м³</span></td>
+              </tr>
+              <tr class="ind-sep"><td colspan="3">Параметры газопылевых потоков</td></tr>
+              <tr><td>—</td><td><span class="ind-name">Скорость газопылевых потоков</span></td><td class="ind-ranges"><span>(0,5 – 60) м/с</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Расход газопылевых потоков</span></td><td class="ind-ranges"><span>(0,05 – 40) м³/с</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Температура газопылевых потоков</span></td><td class="ind-ranges"><span>(от −40 до 800) °С</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Влажность газопылевого потока</span></td><td class="ind-ranges"><span>(0,001 – 4,381) кг/м³</span><span>(0 – 100) %</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Относительная влажность газа</span></td><td class="ind-ranges"><span>(3 – 100) %</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Динамическое давление газопылевого потока</span></td><td class="ind-ranges"><span>(0 – 10000) Па</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Статическое давление газопылевого потока</span></td><td class="ind-ranges"><span>(от −20000 до 20000) Па</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Полное давление газопылевого потока</span></td><td class="ind-ranges"><span>(0 – 2000) Па</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Диаметр газохода</span></td><td class="ind-ranges"><span>(20 – 50000) мм</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Коэффициент избытка воздуха</span></td><td class="ind-ranges"><span>(1,00 – 9,99)</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Коэффициент потерь тепла</span></td><td class="ind-ranges"><span>(0,1 – 99,9) %</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">КПД сгорания топлива</span></td><td class="ind-ranges"><span>(0,1 – 99,9) %</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Мощность выброса загрязняющего вещества из источника</span></td><td class="ind-ranges"><span>—</span></td></tr>
+              <tr><td>—</td><td><span class="ind-name">Эффективность работы газоочистной установки (ГОУ)</span></td><td class="ind-ranges"><span>—</span></td></tr>
             </tbody>
           </table>
         </div>
       </div>
-      <!-- ▼ МЕСТО ДЛЯ ФОТО: <img src="путь/к/фото.jpg" alt="..."> -->
-      <figure class="fig-slot ind-photo rv" style="--d:.1s">
-        <svg class="fig-ic" viewBox="0 0 48 48" aria-hidden="true">
-          <rect x="6" y="8" width="36" height="28" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <circle cx="17" cy="18" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M6 34l10-9 8 7 7-6 11 9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-        </svg>
-        <span class="mono fig-label">Место для фото</span>
-      </figure>
+      <img class="ind-photo rv" style="--d:.1s" src="foto2.jpeg" alt="Измерения промышленных выбросов">
     </div>
 
     <div class="cta-col rv" style="--d:.15s">
@@ -1338,7 +1740,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Научно-прикладные исследования в области экологии</h3>
-            <p class="wrow-desc">Мы не ограничиваемся разовыми замерами</p>
+            <p class="wrow-desc">Мы не ограничиваемся разовыми замерами — проводим научно-прикладные исследования, которые помогают не просто констатировать факт, а находить системные решения экологических задач. Такой подход сочетает научную методологию с практическими целями: от проектирования объектов до снижения рисков и оптимизации природоохранных мероприятий.</p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-blog-1">Подробнее <span class="ar">▾</span></button>
         </div>
@@ -1346,7 +1748,11 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <div class="wrow-panel-in">
             <div class="wrow-body">
               <p class="wrow-label">Что мы делаем:</p>
-              <p class="wrow-text">Проводим анализ технологического процесса</p>
+              <p class="wrow-text">1. Проводим анализ технологического процесса, климатических условий и технических характеристик установленной системы пылеподавления.</p>
+              <p class="wrow-text">2. Осуществляем разработку методики и программы испытаний в соответствии с ТЗ. Определяем точки отбора проб (на границе склада, с наветренной и подветренной сторон) и подбираем подходящие методы контроля (гравиметрический, оптический, аспирационный) и пылеуловители (фильтры, пассивные пробоотборники).</p>
+              <p class="wrow-text">3. Проводим серии параллельных инструментальных замеров концентрации пыли в воздухе при работающей и выключенной системе пылеподавления, а также при различных метеоусловиях.</p>
+              <p class="wrow-text">4. Рассчитываем эффективность систем с учетом фонового загрязнения, интенсивности перевалки грузов и погодных факторов.</p>
+              <p class="wrow-text">5. Оформляем результаты работ в виде методике испытаний, содержащую требования к оборудованию, методологию и объем инструментальных измерений, алгоритмы вычислений и формы отчетности.</p>
             </div>
           </div>
         </div>
@@ -1356,14 +1762,14 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Решение нестандартных задач в области экологии</h3>
-            <p class="wrow-desc">Текст для нестандартных задач...</p>
+            <p class="wrow-desc"></p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-blog-2">Подробнее <span class="ar">▾</span></button>
         </div>
         <div class="wrow-panel" id="wrow-blog-2">
           <div class="wrow-panel-in">
             <div class="wrow-body">
-              <p class="wrow-label">Что делает:</p>
+              <p class="wrow-label">Что делаем:</p>
 
               <div class="wrows">
                 <div class="wrow">
@@ -1420,7 +1826,40 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
                   <div class="wrow-panel" id="wrow-blog-n2">
                     <div class="wrow-panel-in">
                       <div class="wrow-body">
-                        <p class="wrow-text">Текст будет добавлен позже.</p>
+                        <p class="wrow-text">Мы проводим определение эффективности понтонов, что позволяет объективно оценить, насколько надёжно понтон снижает испарение нефтепродуктов и предотвращает выбросы паров углеводородов в атмосферу.</p>
+                        <div class="work-cols">
+                          <div class="work-col">
+                            <h4 class="work-h">Что мы измеряем</h4>
+                            <ul class="work-list">
+                              <li>В рамках обследования фиксируем комплекс параметров, которые в совокупности показывают реальную эффективность понтона:</li>
+                              <li>концентрацию паров углеводородов в газовом пространстве резервуара - над зеркалом нефтепродукта, а также в зоне уплотнений и по периметру понтона. Измерения проводим для сравнения ситуации «с понтоном» и (при возможности и согласовании) «без понтона» либо с моделированием сценария;</li>
+                              <li>геометрические и эксплуатационные параметры: положение понтона относительно стенок и кровли, состояние уплотняющих затворов, зазоры, следы коррозии, деформации, целостность конструкции;</li>
+                              <li>динамику показателей во времени (при необходимости - серии замеров в разные периоды суток или при разных режимах эксплуатации), чтобы учесть влияние внешних факторов (температура воздуха, загрузка/опорожнение резервуара).</li>
+                            </ul>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Как проводим работы</h4>
+                            <ol class="work-steps">
+                              <li>Процесс организован так, чтобы обеспечить достоверность данных и соблюдение требований промышленной и экологической безопасности:</li>
+                              <li><span class="n">01</span>Подготовительный этап. Согласуем с заказчиком точки отбора проб и график работ, проверяем наличие допусков и нарядов-допусков на проведение работ на объекте, готовим оборудование (газоанализаторы, манометры, термометры, измерительные инструменты).</p></li>
+                              <li><span class="n">02</span>Визуально-инструментальный осмотр. Осматриваем понтон, уплотнения, направляющие, затворы и элементы крепления. Фиксируем видимые дефекты (коррозия, деформации, износ уплотнений).</li>
+                              <li><span class="n">03</span>Инструментальные замеры. С помощью поверенных приборов выполняем замеры концентраций паров углеводородов. При необходимости проводим серию замеров с учётом технологических операций (приём/откачка продукта).</li>
+                              <li><span class="n">04</span>Обработка данных. Сопоставляем результаты с нормативами и расчётными значениями, учитываем поправки на температуру и давление, оцениваем погрешность измерений.</li>
+                              <li><span class="n">05</span>Анализ и выводы. Определяем фактическую эффективность понтона (в том числе в процентном выражении снижения выбросов относительно расчётного уровня без понтона), выявляем причины отклонений и формируем рекомендации.</li>
+                            </ol>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Результаты работы</h4>
+                            <ul class="work-list">
+                              <li>По завершении работ вы получаете полный пакет документов и практических выводов:</li>
+                              <li>техническое заключение с описанием состояния понтона, перечнем выявленных дефектов и оценкой его герметичности;</li>
+                              <li>протоколы измерений с указанием точек отбора проб, условий проведения замеров, результатов и погрешностей, а также ссылками на применяемые методики и данные о поверке приборов;</li>
+                              <li>оценку эффективности работы понтона, включая расчётное снижение выбросов паров углеводородов и сравнение с нормативными или целевыми значениями;</li>
+                              <li>рекомендации по устранению дефектов - с указанием приоритетности работ и возможных способов восстановления герметичности (замена уплотнений, регулировка, ремонт конструкции и т.п.).</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <p class="work-fit">Услуга</p>
                       </div>
                     </div>
                   </div>
@@ -1436,7 +1875,38 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
                   <div class="wrow-panel" id="wrow-blog-n3">
                     <div class="wrow-panel-in">
                       <div class="wrow-body">
-                        <p class="wrow-text">Текст будет добавлен позже.</p>
+                        <p class="wrow-text">Наша лаборатория проводит инструментальные измерения на котлах и газотурбинных установках - эти данные служат основой для разработки режимных карт. Мы помогаем предприятиям оптимизировать работу энергооборудования, снижать расход топлива и минимизировать выбросы загрязняющих веществ.</p>
+                        <div class="work-cols">
+                          <div class="work-col">
+                            <h4 class="work-h">Что мы измеряем</h4>
+                            <ul class="work-list">
+                              <li>концентрации основных загрязняющих веществ в дымовых газах (оксиды азота NOₓ, оксид углерода CO, диоксид серы SO₂ и др.); </li>
+                              <li>содержание кислорода (O₂) и коэффициент избытка воздуха - ключевой параметр для настройки режимов горения;</li>
+                              <li>температуру дымовых газов и других контрольных точек;</li>
+                              <li>скорость газового потока и объёмный расход дымовых газов;</li>
+                              <li>параметры работы оборудования в разных режимах нагрузки (включая переходные режимы).</li>
+                            </ul>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Как проводим работы</h4>
+                            <ol class="work-steps">
+                              <li><span class="n">01</span>Предварительный анализ. Изучаем техническую документацию, паспортные характеристики котла или ГТУ, текущие режимные параметры и историю эксплуатации.</li>
+                              <li><span class="n">02</span>Выезд на объект и подготовка. Согласовываем точки отбора проб и места установки измерительных приборов.</li>
+                              <li><span class="n">03</span>Инструментальные замеры. Используем поверенные газоанализаторы, термометры и анемометры; выполняем серию измерений на разных нагрузках (например, 50%, 75%, 100% мощности).</li>
+                              <li><span class="n">04</span>Контроль условий. Фиксируем параметры окружающей среды и режим работы оборудования, чтобы исключить влияние внешних факторов.</li>
+                              <li><span class="n">05</span>Обработка данных. Рассчитываем массовые и объёмные выбросы, удельные показатели на единицу топлива/энергии, определяем оптимальные диапазоны избытка воздуха и температур.</li>
+                            </ol>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Результаты работы</h4>
+                            <ul class="work-list">
+                              <li>протоколы измерений с указанием методик, средств измерений, условий проведения работ и результатов измерений;</li>
+                              <li>расчёт выбросов и удельных показателей – это необходимо для экологического контроля, отчётности и инвентаризации источников выбросов;</li>
+                              <li>рекомендации по оптимизации - практические шаги для повышения КПД, снижения расхода топлива и уменьшения негативного воздействия на окружающую среду.</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <p class="work-fit">Услуга</p>
                       </div>
                     </div>
                   </div>
@@ -1452,7 +1922,37 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
                   <div class="wrow-panel" id="wrow-blog-n4">
                     <div class="wrow-panel-in">
                       <div class="wrow-body">
-                        <p class="wrow-text">Текст будет добавлен позже.</p>
+                        <p class="wrow-text">Наша лаборатория проводит инструментальные измерения на котельных установках и газотурбинных установках для определения фактических выбросов загрязняющих веществ. Услуга особенно актуальна при подготовке к проверкам Росприроднадзора: мы помогаем подтвердить соответствие нормативам и подобрать режимные параметры.</p>
+                        <div class="work-cols">
+                          <div class="work-col">
+                            <h4 class="work-h">Что мы измеряем</h4>
+                            <ul class="work-list">
+                              <li>концентрации основных загрязняющих веществ в дымовых газах (оксиды азота NOₓ, оксид углерода CO, диоксид серы SO₂, взвешенные вещества и др.); </li>
+                              <li>параметры газового потока — скорость, температуру, давление, объёмный расход;</li>
+                              <li>показатели избытка воздуха и полноты сгорания топлива;</li>
+                              <li>параметры работы оборудования в разных режимах нагрузки.</li>
+                            </ul>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Как проводим работы</h4>
+                            <ol class="work-steps">
+                              <li><span class="n">01</span>Предварительный анализ. Изучаем паспорт оборудования, режимные карты, данные предыдущих замеров и требования документов.</li>
+                              <li><span class="n">02</span>Выезд на объект. Выполняем замеры на штатных измерительных точках в соответствии с методиками.</li>
+                              <li><span class="n">03</span>Инструментальный контроль. Используем поверенные газоанализаторы, измерители скорости и температуры; при необходимости — отбор проб для лабораторного анализа.</li>
+                              <li><span class="n">04</span>Фиксация режимов. Проводим измерения при разных нагрузках (минимальной, номинальной, максимальной), чтобы оценить динамику выбросов и стабильность работы оборудования.</li>
+                              <li><span class="n">05</span>Обработка данных. Рассчитываем массовые выбросы, приводим результаты к стандартным условиям, проверяем сопоставимость с нормативами.</li>
+                            </ol>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Результаты работы</h4>
+                            <ul class="work-list">
+                              <li>протокол измерений с указанием методик, средств измерений и условий проведения измерений;</li>
+                              <li>расчёт фактических выбросов и сравнение с установленными нормативами;</li>
+                              <li>рекомендации по подбору оптимального режима работы котла или ГТУ, позволяющего снизить выбросы и повысить энергоэффективность.</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <p class="work-fit">Услуга</p>
                       </div>
                     </div>
                   </div>
@@ -1468,7 +1968,38 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
                   <div class="wrow-panel" id="wrow-blog-n5">
                     <div class="wrow-panel-in">
                       <div class="wrow-body">
-                        <p class="wrow-text">Текст будет добавлен позже.</p>
+                        <p class="wrow-text">Мы помогаем предприятиям выявить источники и причины аномальных выбросов загрязняющих веществ, чтобы затем их устранить и снизить негативное воздействие на окружающую среду.</p>
+                        <div class="work-cols">
+                          <div class="work-col">
+                            <h4 class="work-h">Что мы измеряем и анализируем</h4>
+                            <ul class="work-list">
+                              <li>концентрации загрязняющих веществ в выбросах на разных участках технологической цепочки; </li>
+                              <li>возможные неучтённые или «залповые» источники выбросов, включая аварийные и вспомогательные узлы;</li>
+                              <li>параметры работы оборудования (температура, давление, расход, режимы горения и т.п.), которые могут провоцировать аномалии;</li>
+                              <li>соответствие фактических показателей проектным и нормативным значениям.</li>
+                            </ul>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Как проводим работы</h4>
+                            <ol class="work-steps">
+                              <li><span class="n">01</span>Предварительный аудит. Изучаем техдокументацию, режимные карты, данные ПЭК, отчёты предыдущих замеров и замечания надзорных органов.</li>
+                              <li><span class="n">02</span>Выезд на объект и инструментальные замеры. Проводим точечные измерения в критических точках, при необходимости - серию замеров в разных режимах работы оборудования.</li>
+                              <li><span class="n">03</span>Формирование программы испытаний. Определяем перечень точек контроля, периодичность и количество замеров, методики и оборудование, сценарии нагрузочных и переходных режимов.</li>
+                              <li><span class="n">04</span>Анализ результатов и выявление причин. Сопоставляем данные с нормативами и технологическими параметрами, выявляем «узкие места» и факторы, вызывающие аномальные выбросы.</li>
+                              <li><span class="n">05</span>Рекомендации по снижению выбросов. Формируем перечень технологических, организационных, аппаратных мер и предложения по корректировке технологии.</li>
+                            </ol>
+                          </div>
+                          <div class="work-col">
+                            <h4 class="work-h">Результаты работы</h4>
+                            <ul class="work-list">
+                              <li>программа испытаний полностью готовая для проведения инструментальных измерений;</li>
+                              <li>отчёт с выявленными причинами аномальных выбросов и подтверждёнными данными замеров;</li>
+                              <li>перечень первоочередных мер по снижению выбросов и рекомендации по дальнейшей оптимизации;</li>
+                              <li>документы, которые можно использовать для взаимодействия с надзорными органами и обоснования природоохранных мероприятий.</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <p class="work-fit">Услуга</p>
                       </div>
                     </div>
                   </div>
@@ -1483,7 +2014,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="wrow-bar">
           <div class="wrow-main">
             <h3 class="wrow-title">Внедрение методик измерений атмосферного воздуха и промышленных выбросов</h3>
-            <p class="wrow-desc">Мы помогаем внедрять методики измерений</p>
+            <p class="wrow-desc">Мы помогаем внедрять методики измерений – от подбора нормативной базы и оборудования до запуска рабочего процесса на объекте. </p>
           </div>
           <button class="wrow-btn" aria-expanded="false" aria-controls="wrow-blog-3">Подробнее <span class="ar">▾</span></button>
         </div>
@@ -1491,7 +2022,10 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <div class="wrow-panel-in">
             <div class="wrow-body">
               <p class="wrow-label">Что мы делаем:</p>
-              <p class="wrow-text">Подбираем оборудование.</p>
+              <p class="wrow-text">•        подбираем оборудование (газоанализаторы, аспираторы, пробоотборные системы) и расходные материалы (сорбционные трубки, фильтры, поглотительные растворы) с учётом специфики объекта и состава выбросов.</p>
+              <p class="wrow-text">•        помогаем устранить «узкие места» методик, которые приводят к ошибкам в отчётности или замечаниям при проверках.</p>
+              <p class="wrow-text">•        создаем и адаптируем формы актов отбора проб, записей, журналов и протоколов испытаний под конкретные методики.</p>
+              <p class="wrow-text">•        готовим запросы разъяснений разработчикам методик и обсуждаем все возникающие проблемы и вопросы по методикам.</p>
             </div>
           </div>
         </div>
@@ -1500,7 +2034,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   </div>
 </section>
 
-<!-- декоративный разделитель: линия + градиент -->
+<!-- декоративный разделитель: тонкая линия-акцент -->
 <div class="divider" aria-hidden="true"></div>
 
 <!-- 7. О НАС -->
@@ -1519,23 +2053,54 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <h3>Команда</h3>
         <div class="ab-text">
           <p>Высокая точность измерений и достоверность результатов зависят от людей, которые проводят измерения.</p>
+          <p>Все сотрудники регулярно участвуют во внутренних обучениях, курсах повышения квалификации, подтверждают свои компетенции в рамках проверок лаборатории и участия в межлабораторных сличительных испытаниях (МСИ) с отличными результатами.</p>
+          <p>ООО «ЦНПИ «АналитЭко» входит в состав технического комитета по стандартизации ТК 457 «Качество воздуха». В рамках работы в ТК мы на постоянной основе выполняем экспертизу проектов государственных стандартов в области охраны атмосферного воздуха и технических условий. Этот опыт гарантирует заказчикам применение передовых методик, высокий уровень компетенции наших специалистов при проведении экологических исследований и позволяет лаборатории активно участвовать в формировании методической базы в области экологического мониторинга.</p>
         </div>
       </article>
 
       <!-- Наши преимущества -->
       <article class="ab rv" id="about-why" style="--d:.05s">
-        <h3>Наши преимущества</h3>
+        <h3>Почему нас выбирают</h3>
         <div class="why-grid">
           <div class="why-col">
             <div class="why-item">
               <h4>Современное оборудование</h4>
               <p>Лаборатория оснащена современным и высокоточным измерительным оборудованием, позволяющим решать множество аналитических и исследовательских задач. Многокомпонентные переносные газоанализаторы, портативные хроматографы и профессиональные метеостанции позволяют проводить точные измерения с максимальной мобильностью.</p>
             </div>
+            <div class="why-item">
+              <h4>Оперативность не только в критических ситуациях</h4>
+              <p>Мы ценим Ваше время, поэтому проводим измерения в сжатые сроки и в точном соответствии методиками измерений. Укомплектованные мобильные посты позволяют нам оперативно выезжать для отбора проб в течение 1-2 дней с момента согласования заявки. При необходимости срочного решения задач (при аварийных ситуациях или перед проверками) мы предоставляем результаты измерений в течение 24 часов.</p>
+            </div>
+            <div class="why-item">
+              <h4>Опытные специалисты</h4>
+              <p>Специалисты нашей лаборатории имеют многолетний опыт работы со сложными многокомпонентными газовыми смесями, специфическими загрязняющими веществами на объектах всех категорий НВОС – от небольших котельных до металлургических гигантов. Мы знаем специфику контроля организованных и неорганизованных источников выбросов изнутри. Обладая глубокими знаниями методов измерений и навыками работы, они обеспечивают минимальную погрешность измерений.</p>
+            </div>
+            <div class="why-item">
+              <h4>Точность и достоверность результатов</h4>
+              <p>Мы гарантируем достоверность получаемых результатов измерений. Наши сотрудники проводят измерения с помощью поверенных приборов, строго соблюдая требования методик измерений. Эффективная организация работ, функционирующая система менеджмента качества, постоянное проведение внутреннего контроля качества измерений и регулярное участие лаборатории в межлабораторных сличительных испытаниях обеспечивают точность измерений</p>
+            </div>
           </div>
           <div class="why-col">
             <div class="why-item">
               <h4>Широкий спектр исследований</h4>
               <p>Наша лаборатория предлагает комплексный контроль качества промышленных выбросов и атмосферного воздуха по более чем 50 показателям. Мы непрерывно развиваемся, осваивая новые методы измерений, внедряя новое оборудование и регулярно повышая квалификацию сотрудников.</p>
+            </div>
+            <div class="why-item">
+              <h4>Качество работы и гарантия</h4>
+              <p>Лаборатория гарантирует точность каждого протокола. Система менеджмента качества по ГОСТ ISO/IEC 17025 включает три независимых уровня проверки каждого протокола, что позволяет свести к минимуму риски технических и случайных ошибок, чтобы вы были на 100% уверены в качестве результатов измерений.</p>
+            </div>
+            
+            <div class="why-item">
+              <h4>Анализ результатов и разработка рекомендаций</h4>
+              <p>Мы не просто фиксируем цифры в протоколах. Эксперты нашей лаборатории проводят сопоставление полученных результатов измерений с ПДК и нормативами выбросов, помогают разобраться в результатах, выявляют возможную необходимость наладки оборудования или технологии и дают практический план действий, который помогает предприятию успешно проходить проверки надзорных органов.</p>
+            </div>
+            <div class="why-item">
+              <h4>Профессиональный подход</h4>
+              <p>Все сотрудники нашей лаборатории от инженера до начальника проводят отбор проб и измерения, изнутри знают нюансы всех методик, что обеспечивает высокую точность и достоверность результатов. Мы находим решения самых сложных задач, предлагая клиентам научно обоснованный и технологичный подход к каждому измерению, привлекая при необходимости к их решению партнеров из числа НИИ и других лабораторий.</p>
+            </div>
+            <div class="why-item">
+              <h4>Конкурентная стоимость</h4>
+              <p>Мы предлагаем прозрачную, гибкую систему расчета стоимости исследований, которая позволяет находить оптимальные решения для каждого запроса. Заключая долгосрочный договор, вы фиксируете стоимость измерений и защищаете себя от роста цен, а при увеличении объема однотипных замеров — получаете прогрессивную скидку.</p>
             </div>
           </div>
         </div>
@@ -1557,6 +2122,9 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <h4 class="ab-sub">Основные направления работы</h4>
           <ul class="co-list">
             <li>анализ атмосферного воздуха и измерения шума;</li>
+            <li>контроль промышленных выбросов и определение эффективности работы ГОУ;</li>
+            <li>научно-прикладные исследования в области экологии;</li>
+            <li>решение нестандартных задач в области экологии.</li>
           </ul>
         </div>
 
@@ -1564,6 +2132,8 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           <h4 class="ab-sub">Инициативные научные работы</h4>
           <ul class="co-list">
             <li>исследование влияния неравномерности распределения поля скоростей в газоходе на точность измерений скорости газопылевых потоков;</li>
+            <li>совершенствование методологии высокоточных измерений параметров газопылевых потоков с целью упрощения процедур измерений в условиях промышленной эксплуатации;</li>
+            <li>методологическое обеспечение гравиметрического определения взвешенных веществ в атмосферном воздухе и промышленных выбросах.</li>
           </ul>
         </div>
 
@@ -1596,11 +2166,35 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <div class="faq">
           <div class="faq-item open">
             <button class="faq-q" aria-expanded="true">Сколько времени занимает подтверждение размеров СЗЗ?<span class="faq-ic"></span></button>
-            <div class="faq-a"><div class="faq-a-in"><p>Для подтверждения размеров санитарно-защитной зоны (СЗЗ)</p></div></div>
+            <div class="faq-a"><div class="faq-a-in"><p>Для подтверждения размеров санитарно-защитной зоны (СЗЗ) требуется проведение длительных натурных исследований атмосферного воздуха и физических факторов (30–50 дней замеров в зависимости от класса опасности объекта). Мы проводим циклические измерения и подготавливаем пакет документов, который гарантированно пройдет экспертизу.</p></div></div>
           </div>
           <div class="faq-item">
             <button class="faq-q" aria-expanded="false">Что делать, если утерян бумажный оригинал протокола испытаний (измерений)?<span class="faq-ic"></span></button>
             <div class="faq-a"><div class="faq-a-in"><p>Если вам срочно нужен бумажный экземпляр с синей печатью, мы бесплатно подготовим дубликат и отправим его вам в день обращения.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">Как вы рассчитываете погрешность измерений и учитываются ли они в протоколе?<span class="faq-ic"></span></button>
+            <div class="faq-a"><div class="faq-a-in"><p>Погрешность рассчитываем по валидированным методикам и указываем в каждом протоколе. Она складывается из погрешностей оборудования, отбора проб и лабораторного анализа, что делает результаты достоверными и пригодными для экспертизы.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">Почему в коммерческом предложении указана стоимость «от»?<span class="faq-ic"></span></button>
+            <div class="faq-a"><div class="faq-a-in"><p>Точный расчёт мы делаем после уточнения всех вопросов и направляем в коммерческом предложении.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">Подходят ли протоколы для предоставления в надзорные органы?<span class="faq-ic"></span></button>
+            <div class="faq-a"><div class="faq-a-in"><p>Мы проводим измерения в строго соответствии с методиками, включенными в нашу область аккредитации. Протоколы испытаний могут быть переданы в контролирующие органы.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">Нужно ли останавливать производство или работу оборудования на время замеров?<span class="faq-ic"></span></button>
+            <div class="faq-a"><div class="faq-a-in"><p>Нет, останавливать процессы не нужно. Наоборот, методики требуют проведения инструментальных замеров промышленных выбросов именно в штатном режиме работы оборудования.</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">Как проверить, что оборудование поверено?<span class="faq-ic"></span></button>
+            <div class="faq-a"><div class="faq-a-in"><p>Каждому газоанализатору, аспиратору и шумомеру присвоен уникальный заводской номер. Вы можете проверить актуальность их поверок в режиме онлайн через государственную систему ФГИС «Аршин». Номера свидетельств и сроки действия поверок мы в обязательном порядке указываем в каждом выданном протоколе испытаний (измерений).</p></div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">Можете ли вы провести замеры на источниках, работающих в циклическом или нестационарном режиме?<span class="faq-ic"></span></button>
+            <div class="faq-a"><div class="faq-a-in"><p>Да, мы умеем работать с нестандартными технологическими циклами. Если ваше оборудование работает циклично (например, печи обжига, сварочные посты) — мы согласуем программу замеров с фактическим режимом и фиксируем результаты в характерных точках цикла.</p></div></div>
           </div>
         </div>
       </article>
@@ -1632,7 +2226,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="#top" style="display:flex;align-items:center;gap:13px">
-          <span class="logo-slot" style="width:46px;height:46px" title="Место для логотипа"><span class="logo-ph mono">Лого</span></span>
+          <span class="logo-slot" title="Место для логотипа"><span class="logo-ph mono">Лого</span></span>
           <span class="brand-text"><strong>АналитЭко</strong><small>лаборатория</small></span>
         </a>
         <p class="foot-acc"><a href="https://pub.fsa.gov.ru/ral/view/39037/accredited-entity" target="_blank" rel="noopener">Уникальный номер записи об аккредитации в реестре аккредитованных лиц <b>RA.RU.21СО07</b> · ООО «ЦНПИ» АналитЭко</a></p>
