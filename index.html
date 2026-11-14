@@ -100,6 +100,7 @@ button{font:inherit;color:inherit}
   color:var(--muted);
   flex-shrink:0;
 }
+.logo-slot img{mix-blend-mode:multiply}
 .logo-ph{font-size:11px;letter-spacing:.22em;text-transform:uppercase}
 .brand-text strong{font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:-.01em;display:block;line-height:1.1}
 .brand-text small{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
@@ -2524,7 +2525,13 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   var io = new IntersectionObserver(function(es){
     es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); } });
   }, {threshold:.15, rootMargin:'0px 0px -40px'});
-  $$('.rv').forEach(function(el){ io.observe(el); });
+  var ioTables = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); ioTables.unobserve(e.target); } });
+  }, {threshold:0, rootMargin:'0px 0px -40px'});
+  $$('.rv').forEach(function(el){
+    if(el.classList.contains('ind-table')) ioTables.observe(el);
+    else io.observe(el);
+  });
 
   /* Счётчики */
   var ioCnt = new IntersectionObserver(function(es){
