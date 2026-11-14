@@ -542,6 +542,50 @@ h1{
 }
 .wrow-text{font-size:15.5px;line-height:1.7;color:var(--ink-2);max-width:84ch}
 
+/* Compact, scan-friendly steps in the emissions-control detail panels. */
+#wrow-em-1 .wrow-body,
+#wrow-em-2 .wrow-body,
+#wrow-em-3 .wrow-body{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+  gap:10px 12px;
+}
+#wrow-em-1 .wrow-label,
+#wrow-em-2 .wrow-label,
+#wrow-em-3 .wrow-label{grid-column:1/-1;margin:0 0 2px}
+#wrow-em-1 .wrow-text,
+#wrow-em-2 .wrow-text,
+#wrow-em-3 .wrow-text{
+  max-width:none;margin:0;padding:13px 15px;
+  border:1px solid var(--line);border-radius:12px;background:var(--surface-2);
+  font-size:14px;line-height:1.6;
+}
+#wrow-em-1 .wrow-text:last-child,
+#wrow-em-2 .wrow-text:last-child{grid-column:1/-1}
+
+/* Single-column step cards in the air, noise, and methods detail panels. */
+#wrow-air-1 .wrow-body,
+#wrow-air-2 .wrow-body,
+#wrow-blog-1 .wrow-body,
+#wrow-blog-3 .wrow-body{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:8px;
+}
+#wrow-air-1 .wrow-label,
+#wrow-air-2 .wrow-label,
+#wrow-blog-1 .wrow-label,
+#wrow-blog-3 .wrow-label{margin:0 0 3px}
+#wrow-air-1 .wrow-text,
+#wrow-air-2 .wrow-text,
+#wrow-blog-1 .wrow-text,
+#wrow-blog-3 .wrow-text{
+  max-width:none;margin:0;padding:13px 15px;
+  border:1px solid var(--line);border-radius:12px;background:var(--surface-2);
+  font-size:14px;line-height:1.6;
+}
+
 /* вложенные строки внутри раскрытия */
 .wrow-body .wrows{margin:22px 0 0;gap:10px}
 .wrow-body .wrow{background:var(--surface-2);border-color:var(--line);border-radius:14px}
@@ -826,7 +870,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   .hero-grid{grid-template-columns:1fr;gap:48px}
   .hero-img{aspect-ratio:1280/853;max-width:520px;margin:0 auto}
   .ab-2col{grid-template-columns:1fr;gap:36px}
-  .fig-cert{max-width:360px}
+  .fig-cert{width:100%;max-width:360px;margin-inline:auto;justify-self:center}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px 24px}
   .svc-grid{grid-template-columns:1fr 1fr;gap:16px}
   .ind-grid{grid-template-columns:1fr;gap:36px}
@@ -995,6 +1039,18 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   .foot-grid{grid-template-columns:1fr;gap:32px}
   .status-stats{grid-template-columns:1fr 1fr;gap:12px}
   .steps{grid-template-columns:1fr}
+  #wrow-em-1 .wrow-body,
+  #wrow-em-2 .wrow-body,
+  #wrow-em-3 .wrow-body{grid-template-columns:minmax(0,1fr);gap:8px}
+  #wrow-em-1 .wrow-text,
+  #wrow-em-2 .wrow-text,
+  #wrow-em-3 .wrow-text{padding:11px 13px;font-size:13.5px;line-height:1.55}
+  #wrow-em-1 .wrow-text:last-child,
+  #wrow-em-2 .wrow-text:last-child{grid-column:auto}
+  #wrow-air-1 .wrow-text,
+  #wrow-air-2 .wrow-text,
+  #wrow-blog-1 .wrow-text,
+  #wrow-blog-3 .wrow-text{padding:11px 13px;font-size:13.5px;line-height:1.55}
   .ind-table,.ind-scroll{min-width:0;max-width:100%}
   .ind-scroll{max-height:none;overflow-x:clip;overflow-y:visible;box-shadow:none}
   .ind-scroll,.ind-scroll table,.ind-scroll tbody{width:100%;max-width:100%;min-width:0}
