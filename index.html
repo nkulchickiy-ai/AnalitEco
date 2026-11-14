@@ -402,6 +402,7 @@ h1{
 }
 .ind-search input::placeholder{color:var(--muted);opacity:1}
 .ind-empty{margin:12px 0;color:var(--muted);font-size:14px}
+.ind-expand-row{display:none}
 .ind-scroll{
   border:1px solid var(--line);
   background:var(--surface);
@@ -986,35 +987,54 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 }
 
 @media (max-width:640px){
+  html,body{width:100%;max-width:100%;overflow-x:clip}
+  .wrap{width:100%;padding-left:16px;padding-right:16px}
   .wrow-main{flex-basis:100%}
   .con-item{grid-template-columns:1fr;gap:6px}
   .svc-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr;gap:32px}
   .status-stats{grid-template-columns:1fr 1fr;gap:12px}
   .steps{grid-template-columns:1fr}
-  .ind-scroll{max-height:none;overflow:visible;box-shadow:none}
-  .ind-scroll table{display:block;width:100%;min-width:0;table-layout:auto}
+  .ind-table,.ind-scroll{min-width:0;max-width:100%}
+  .ind-scroll{max-height:none;overflow-x:clip;overflow-y:visible;box-shadow:none}
+  .ind-scroll,.ind-scroll table,.ind-scroll tbody{width:100%;max-width:100%;min-width:0}
+  .ind-scroll colgroup,.ind-scroll col{display:none}
+  .ind-scroll table{display:block;table-layout:auto}
   .ind-scroll thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   .ind-scroll tbody{display:grid;gap:10px;padding:12px}
-  .ind-scroll tbody tr:not(.ind-sep){display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
-  .ind-scroll tbody tr:not(.ind-sep) td,
-  .ind-scroll tbody tr:not(.ind-sep) td:first-child{
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row){display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td,
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td:first-child{
     position:static;left:auto;z-index:auto;
     display:grid;grid-template-columns:minmax(6.5rem,.42fr) minmax(0,1fr);gap:10px;
     padding:11px 13px;border-bottom:1px solid var(--line);
     background:transparent;white-space:normal;
   }
-  .ind-scroll tbody tr:not(.ind-sep) td::before{
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td::before{
     color:var(--muted);font:10px/1.5 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;
   }
-  .ind-scroll tbody tr:not(.ind-sep) td:nth-child(1)::before{content:"Код"}
-  .ind-scroll tbody tr:not(.ind-sep) td:nth-child(2)::before{content:"Показатель"}
-  .ind-scroll tbody tr:not(.ind-sep) td:nth-child(3)::before{content:"Диапазон измерений"}
-  .ind-scroll tbody tr:not(.ind-sep) td:last-child{border-bottom:0}
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td:nth-child(1)::before{content:"Код"}
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td:nth-child(2)::before{content:"Показатель"}
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td:nth-child(3)::before{content:"Диапазон измерений"}
+  .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td:last-child{border-bottom:0}
   .ind-scroll td:nth-child(1){font-size:12px}
   .ind-scroll td.ind-ranges span{white-space:normal;overflow-wrap:anywhere;line-height:1.6}
   .ind-scroll tbody tr.ind-sep{display:block;border-radius:10px;background:var(--accent);color:#fff}
   .ind-scroll tbody tr.ind-sep td{display:block;padding:10px 13px;border:0;color:#fff}
+  .ind-scroll tbody tr.ind-extra-row:not(.ind-sep):not(.ind-expand-row){display:none}
+  .ind-table.is-expanded .ind-scroll tbody tr.ind-extra-row:not(.ind-sep):not(.ind-expand-row){display:grid}
+  .ind-scroll tbody tr.ind-extra-row.ind-sep{display:none}
+  .ind-table.is-expanded .ind-scroll tbody tr.ind-extra-row.ind-sep{display:block}
+  .ind-scroll tbody tr.ind-expand-row{display:block;overflow:visible;border:0;border-radius:0;background:transparent}
+  .ind-scroll tbody tr.ind-expand-row td{position:static;left:auto;z-index:auto;display:block;padding:0;border:0;background:transparent}
+  .ind-scroll tbody tr.ind-expand-row td::before{content:none}
+  .ind-metrics-toggle{
+    display:flex;align-items:center;justify-content:space-between;width:100%;min-height:46px;
+    padding:10px 14px;border:1px solid var(--line-strong);border-radius:12px;
+    background:var(--surface);color:var(--accent-ink);font:600 13.5px var(--font-body);cursor:pointer;
+  }
+  .ind-metrics-toggle .ar{font-size:10px;transition:transform .25s ease}
+  .ind-metrics-toggle[aria-expanded="true"] .ar{transform:rotate(180deg)}
   .ind-scroll tbody tr[hidden]{display:none!important}
 }
 
@@ -2466,15 +2486,66 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   $$('.js-mail').forEach(function(a){ a.textContent = MAIL; a.href = 'mailto:' + MAIL; });
 
   /* Поиск по таблицам показателей */
+  function setMetricsExpanded(tableWidget, open){
+    if(!tableWidget) return;
+    tableWidget.classList.toggle('is-expanded', open);
+    var toggleRow = $('.ind-expand-row', tableWidget);
+    var toggle = $('.ind-metrics-toggle', tableWidget);
+    var dataRows = $$('tbody tr:not(.ind-sep):not(.ind-expand-row)', tableWidget);
+    if(toggle){
+      toggle.setAttribute('aria-expanded', open);
+      $('.ind-metrics-toggle-label', toggle).textContent = open ? 'Скрыть показатели' : 'Показать все показатели';
+    }
+    if(toggleRow && dataRows.length >= 3){
+      var tbody = toggleRow.parentElement;
+      if(open) tbody.appendChild(toggleRow);
+      else tbody.insertBefore(toggleRow, dataRows[2].nextSibling);
+    }
+  }
+  $$('.ind-table').forEach(function(tableWidget){
+    var table = $('table', tableWidget);
+    var tbody = $('tbody', table);
+    var dataRows = $$('tr:not(.ind-sep)', tbody);
+    if(dataRows.length < 4) return;
+    var thirdRow = dataRows[2];
+    var allRows = Array.prototype.slice.call(tbody.rows);
+    allRows.slice(allRows.indexOf(thirdRow) + 1).forEach(function(row){ row.classList.add('ind-extra-row'); });
+    tbody.id = table.id + '-body';
+    var toggleRow = document.createElement('tr');
+    toggleRow.className = 'ind-expand-row';
+    var toggleCell = document.createElement('td');
+    toggleCell.colSpan = 3;
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'ind-metrics-toggle';
+    toggle.setAttribute('aria-expanded','false');
+    toggle.setAttribute('aria-controls',tbody.id);
+    var label = document.createElement('span');
+    label.className = 'ind-metrics-toggle-label';
+    label.textContent = 'Показать все показатели';
+    var arrow = document.createElement('span');
+    arrow.className = 'ar';
+    arrow.setAttribute('aria-hidden','true');
+    arrow.textContent = '▾';
+    toggle.appendChild(label);
+    toggle.appendChild(arrow);
+    toggleCell.appendChild(toggle);
+    toggleRow.appendChild(toggleCell);
+    tbody.insertBefore(toggleRow, thirdRow.nextSibling);
+    toggle.addEventListener('click', function(){
+      setMetricsExpanded(tableWidget, toggle.getAttribute('aria-expanded') !== 'true');
+    });
+  });
   $$('[data-table-search]').forEach(function(input){
     var table = document.getElementById(input.getAttribute('data-table-search'));
     var empty = input.closest('.ind-table').querySelector('.ind-empty');
     var rows = $$('tbody tr', table);
     input.addEventListener('input', function(){
       var query = input.value.trim().toLocaleLowerCase('ru-RU');
+      if(query) setMetricsExpanded(input.closest('.ind-table'), true);
       var visibleCount = 0;
       rows.forEach(function(row){
-        if(row.classList.contains('ind-sep')) return;
+        if(row.classList.contains('ind-sep') || row.classList.contains('ind-expand-row')) return;
         var match = !query || row.textContent.toLocaleLowerCase('ru-RU').includes(query);
         row.hidden = !match;
         if(match) visibleCount++;
@@ -2483,7 +2554,9 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         if(!row.classList.contains('ind-sep')) return;
         var headingMatch = query && row.textContent.toLocaleLowerCase('ru-RU').includes(query);
         var sectionRows = [];
-        for(var j=i+1;j<rows.length && !rows[j].classList.contains('ind-sep');j++) sectionRows.push(rows[j]);
+        for(var j=i+1;j<rows.length && !rows[j].classList.contains('ind-sep');j++){
+          if(!rows[j].classList.contains('ind-expand-row')) sectionRows.push(rows[j]);
+        }
         if(headingMatch){
           sectionRows.forEach(function(sectionRow){
             if(sectionRow.hidden) visibleCount++;
@@ -2629,7 +2702,12 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     }
   });
   searchResults.addEventListener('click', function(e){
-    if(e.target.closest('.search-result')) closeSiteSearch(false);
+    var result = e.target.closest('.search-result');
+    if(result){
+      var target = document.getElementById(result.getAttribute('href').slice(1));
+      if(target) setMetricsExpanded(target.closest('.ind-table'), true);
+      closeSiteSearch(false);
+    }
   });
   document.addEventListener('click', function(e){
     if(!searchPanel.hidden && !searchPanel.contains(e.target) && !searchToggle.contains(e.target)) closeSiteSearch(false);
