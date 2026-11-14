@@ -129,6 +129,40 @@ button{font:inherit;color:inherit}
 .main-nav a:hover::after,
 .main-nav a.active::after{transform:scaleX(1)}
 
+.site-search-toggle{
+  display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;
+  border:1px solid transparent;border-radius:12px;background:transparent;color:var(--ink-2);
+  cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.site-search-toggle:hover,.site-search-toggle[aria-expanded="true"]{
+  background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-ink);
+}
+.site-search-toggle svg{width:20px;height:20px;display:block}
+.site-search{
+  position:absolute;z-index:110;top:calc(100% + 8px);
+  right:max(28px,calc((100vw - var(--wrap))/2 + 28px));
+  width:min(560px,calc(100vw - 56px));padding:12px;
+  border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);
+}
+.site-search[hidden]{display:none}
+.site-search input{
+  display:block;width:100%;min-height:48px;padding:11px 14px;
+  border:1px solid var(--line-strong);border-radius:11px;background:var(--bg);
+  color:var(--ink);font:500 15px var(--font-body);
+}
+.site-search input::placeholder{color:var(--muted);opacity:1}
+.search-results{display:grid;gap:4px;max-height:min(58vh,440px);overflow-y:auto;margin-top:8px}
+.search-results:empty{display:none}
+.search-results li{min-width:0}
+.search-result{
+  display:block;padding:11px 12px;border-radius:10px;
+  transition:background .18s ease;
+}
+.search-result:hover,.search-result:focus-visible{background:var(--accent-soft)}
+.search-result strong{display:block;font-size:14px;font-weight:700;color:var(--ink)}
+.search-result span{display:block;margin-top:3px;font-size:12.5px;line-height:1.45;color:var(--muted)}
+.search-empty{padding:12px;color:var(--muted);font-size:14px}
+
 /* выпадающее подменю */
 .nav-drop{position:relative;display:flex;align-items:center}
 .dropdown{
@@ -872,7 +906,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 }
 
 /* На небольших ноутбуках полное меню не помещается в одну строку. */
-@media (min-width:841px) and (max-width:1080px){
+@media (min-width:841px) and (max-width:1200px){
   .main-nav{
     position:fixed;
     inset:0;
@@ -932,7 +966,10 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   .burger{display:flex}
 }
 
-@media (max-width:1080px){
+@media (max-width:1200px){
+  .site-search-toggle{margin-left:auto}
+  .burger{margin-left:0}
+  .site-search{right:16px;width:calc(100vw - 32px)}
   .main-nav{
     visibility:hidden;
     pointer-events:none;
@@ -1067,7 +1104,16 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
       </span>
       <a href="#contacts">Контакты</a>
     </nav>
+    <button class="site-search-toggle" id="site-search-toggle" type="button" aria-expanded="false" aria-controls="site-search" aria-label="Открыть поиск">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+    </button>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="main-nav" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+  </div>
+  <div class="site-search" id="site-search" role="search" hidden>
+    <label class="sr-only" for="site-search-input">Поиск по сайту</label>
+    <input id="site-search-input" type="search" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" aria-controls="site-search-results" placeholder="Поиск по сайту" autocomplete="off">
+    <ul class="search-results" id="site-search-results" role="listbox"></ul>
+    <p class="search-empty" id="site-search-empty" role="status" hidden>Совпадений не найдено.</p>
   </div>
   <div class="scroll-progress" aria-hidden="true"><span id="progress"></span></div>
 </header>
@@ -2475,6 +2521,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     }
   }
   burger.addEventListener('click', function(){
+    closeSiteSearch(false);
     setMenuOpen(!mast.classList.contains('nav-open'));
   });
   $$('.nav-subtoggle').forEach(function(btn){
@@ -2486,7 +2533,9 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     });
   });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && mast.classList.contains('nav-open')){
+    if(e.key === 'Escape' && searchPanel && !searchPanel.hidden){
+      closeSiteSearch(true);
+    } else if(e.key === 'Escape' && mast.classList.contains('nav-open')){
       setMenuOpen(false);
       burger.focus();
     }
@@ -2495,6 +2544,95 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     a.addEventListener('click', function(){
       setMenuOpen(false);
     });
+  });
+
+  /* Поиск по сайту */
+  var searchToggle = $('#site-search-toggle');
+  var searchPanel = $('#site-search');
+  var searchInput = $('#site-search-input');
+  var searchResults = $('#site-search-results');
+  var searchEmpty = $('#site-search-empty');
+  var searchRecords = $$('section[id], .svc[id], .about-list .ab[id], table[id]', $('main')).map(function(node){
+    var titleNode = $('h1,h2,h3,h4,caption', node);
+    var section = node.closest('section');
+    return {
+      id:node.id,
+      title:titleNode ? titleNode.textContent.trim() : 'Раздел сайта',
+      text:node.textContent.replace(/\s+/g,' ').trim(),
+      isSection:node.tagName.toLowerCase() === 'section',
+      sectionId:section ? section.id : node.id
+    };
+  });
+  function updateSiteSearch(){
+    var query = searchInput.value.trim().toLocaleLowerCase('ru-RU');
+    searchResults.textContent = '';
+    if(!query){
+      searchInput.setAttribute('aria-expanded','false');
+      searchEmpty.hidden = true;
+      return;
+    }
+    var matches = searchRecords.filter(function(record){
+      return (record.title + ' ' + record.text).toLocaleLowerCase('ru-RU').includes(query);
+    });
+    var specificSections = new Set(matches.filter(function(record){ return !record.isSection; }).map(function(record){ return record.sectionId; }));
+    matches = matches.filter(function(record){ return !record.isSection || !specificSections.has(record.id); }).slice(0,8);
+    matches.forEach(function(record){
+      var normalized = record.text.replace(/\s+/g,' ').trim();
+      var index = normalized.toLocaleLowerCase('ru-RU').indexOf(query);
+      var start = Math.max(0,index - 42);
+      var end = Math.min(normalized.length,index + query.length + 72);
+      var snippet = (start ? '…' : '') + normalized.slice(start,end) + (end < normalized.length ? '…' : '');
+      var item = document.createElement('li');
+      item.setAttribute('role','none');
+      var link = document.createElement('a');
+      link.className = 'search-result';
+      link.setAttribute('role','option');
+      link.href = '#' + record.id;
+      var heading = document.createElement('strong');
+      heading.textContent = record.title;
+      var excerpt = document.createElement('span');
+      excerpt.textContent = snippet;
+      link.appendChild(heading);
+      link.appendChild(excerpt);
+      item.appendChild(link);
+      searchResults.appendChild(item);
+    });
+    searchInput.setAttribute('aria-expanded', matches.length ? 'true' : 'false');
+    searchEmpty.hidden = matches.length !== 0;
+  }
+  function closeSiteSearch(returnFocus){
+    if(!searchPanel || searchPanel.hidden) return;
+    searchPanel.hidden = true;
+    searchToggle.setAttribute('aria-expanded','false');
+    searchInput.setAttribute('aria-expanded','false');
+    if(returnFocus) searchToggle.focus();
+  }
+  searchToggle.addEventListener('click', function(){
+    if(!searchPanel.hidden){
+      closeSiteSearch(false);
+      return;
+    }
+    setMenuOpen(false);
+    searchPanel.hidden = false;
+    searchToggle.setAttribute('aria-expanded','true');
+    updateSiteSearch();
+    searchInput.focus();
+  });
+  searchInput.addEventListener('input', updateSiteSearch);
+  searchInput.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown'){
+      var firstResult = $('.search-result',searchResults);
+      if(firstResult){e.preventDefault();firstResult.focus();}
+    } else if(e.key === 'Enter'){
+      var firstMatch = $('.search-result',searchResults);
+      if(firstMatch){e.preventDefault();firstMatch.click();}
+    }
+  });
+  searchResults.addEventListener('click', function(e){
+    if(e.target.closest('.search-result')) closeSiteSearch(false);
+  });
+  document.addEventListener('click', function(e){
+    if(!searchPanel.hidden && !searchPanel.contains(e.target) && !searchToggle.contains(e.target)) closeSiteSearch(false);
   });
 
   /* Тень + прогресс */
