@@ -194,6 +194,8 @@ button{font:inherit;color:inherit}
 /* бургер (моб.) */
 .burger{
   display:none;
+  position:relative;
+  z-index:101;
   margin-left:auto;
   width:46px;height:46px;
   border:1px solid var(--line-strong);
@@ -209,6 +211,7 @@ button{font:inherit;color:inherit}
 .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
 .burger[aria-expanded="true"] span:nth-child(2){opacity:0}
 .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+.nav-subtoggle{display:none}
 
 /* полоса прогресса чтения */
 .scroll-progress{position:absolute;left:0;right:0;bottom:-1px;height:2px;overflow:hidden}
@@ -238,7 +241,7 @@ h1{
 /* фото героя */
 .hero-img{
   width:100%;
-  aspect-ratio:3/2;
+  aspect-ratio:1280/853;
   object-fit:cover;
   border-radius:var(--radius);
   border:1px solid var(--line);
@@ -337,6 +340,18 @@ h1{
   .svc-list{opacity:0;max-height:0;overflow:hidden;transform:none;transition:max-height .5s cubic-bezier(.22,1,.36,1),opacity .3s ease}
   .svc-in.show-svc .svc-desc{display:none}
   .svc-in.show-svc .svc-list{opacity:1;max-height:1600px;overflow:visible;pointer-events:auto}
+  .svc-in{position:relative;padding-bottom:60px}
+  .svc-in::after{
+    content:"+";
+    position:absolute;
+    right:28px;
+    bottom:18px;
+    color:var(--accent);
+    font-size:22px;
+    line-height:1;
+    font-weight:500;
+  }
+  .svc-in.show-svc::after{content:"−"}
 }
 
 /* =====================================================================
@@ -344,6 +359,14 @@ h1{
    ===================================================================== */
 .ind-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:36px;align-items:stretch}
 .ind-table{min-width:0}
+.ind-search{display:flex;margin-bottom:12px}
+.ind-search input{
+  width:100%;min-height:46px;padding:10px 15px;
+  border:1px solid var(--line-strong);border-radius:12px;
+  background:var(--surface);color:var(--ink);font:500 14px var(--font-body);
+}
+.ind-search input::placeholder{color:var(--muted);opacity:1}
+.ind-empty{margin:12px 0;color:var(--muted);font-size:14px}
 .ind-scroll{
   border:1px solid var(--line);
   background:var(--surface);
@@ -375,6 +398,7 @@ h1{
   border-bottom:0;
   white-space:nowrap;
 }
+.ind-scroll thead th:first-child{left:0;z-index:3}
 .ind-scroll td{
   padding:20px 24px;
   border-bottom:1px solid var(--line);
@@ -382,6 +406,12 @@ h1{
   color:var(--ink-2);
   word-wrap:break-word;
   overflow-wrap:anywhere;
+}
+.ind-scroll tbody tr:not(.ind-sep) td:first-child{
+  position:sticky;
+  left:0;
+  z-index:1;
+  background:var(--surface);
 }
 .ind-scroll td:nth-child(1){white-space:nowrap;color:var(--muted);font-size:11.5px}
 .ind-scroll td.ind-ranges{text-align:left;color:var(--muted)}
@@ -394,7 +424,7 @@ h1{
 /* фото в разделах */
 .ind-photo{
   width:100%;
-  aspect-ratio:4/3;
+  aspect-ratio:3/4;
   object-fit:cover;
   border-radius:var(--radius);
   border:1px solid var(--line);
@@ -567,8 +597,8 @@ h1{
 }
 .ab-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:start}
 #lab .ab-2col{align-items:stretch}
-#lab .fig-cert{aspect-ratio:4/3;min-height:320px}
-.fig-cert{aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line);border-radius:var(--radius)}
+#lab .fig-cert{aspect-ratio:2908/2056;min-height:0}
+.fig-cert{aspect-ratio:2908/2056;object-fit:contain;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
 
 .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px 56px;margin-top:8px}
 .why-col{display:grid;gap:32px}
@@ -758,7 +788,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
    ===================================================================== */
 @media (max-width:1080px){
   .hero-grid{grid-template-columns:1fr;gap:48px}
-  .hero-img{aspect-ratio:3/2;max-width:520px;margin:0 auto}
+  .hero-img{aspect-ratio:1280/853;max-width:520px;margin:0 auto}
   .ab-2col{grid-template-columns:1fr;gap:36px}
   .fig-cert{max-width:360px}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px 24px}
@@ -806,9 +836,20 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     box-shadow:none;
     min-width:0;
     padding:6px 0 18px 18px;
-    display:grid;
+    display:none;
     gap:4px;
   }
+  .nav-drop.submenu-open .dropdown{display:grid}
+  .nav-drop{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;width:100%}
+  .drop-toggle{grid-column:1}
+  .nav-subtoggle{
+    grid-column:2;grid-row:1;width:44px;height:44px;margin-left:auto;
+    display:grid;place-items:center;border:1px solid var(--line-strong);
+    border-radius:10px;background:var(--surface);color:var(--accent);cursor:pointer;
+  }
+  .nav-subtoggle::before{content:"+";font-size:20px;line-height:1}
+  .nav-subtoggle[aria-expanded="true"]::before{content:"−"}
+  .dropdown{grid-column:1/-1}
   .dropdown a{
     font-family:var(--font-body);
     font-size:14px;
@@ -819,9 +860,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     border-radius:10px;
   }
   .burger{display:flex}
-  .svc-grid{grid-template-columns:1fr}
   .con-list{grid-template-columns:1fr;gap:16px}
-  .foot-grid{grid-template-columns:1fr;gap:32px}
   .sec{padding:30px 0}
   .sec-head{margin-bottom:28px;grid-template-columns:1fr}
   .about-list{gap:12px}
@@ -831,11 +870,119 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   .ind-scroll table{min-width:560px}
 }
 
+/* На небольших ноутбуках полное меню не помещается в одну строку. */
+@media (min-width:841px) and (max-width:1080px){
+  .main-nav{
+    position:fixed;
+    inset:0;
+    background:var(--bg);
+    z-index:90;
+    flex-direction:column;
+    align-items:flex-start;
+    padding:110px 28px 48px;
+    gap:10px;
+    overflow-y:auto;
+    transform:translateY(-104%);
+    transition:transform .5s cubic-bezier(.22,1,.36,1);
+  }
+  .masthead.nav-open .main-nav{transform:none}
+  .main-nav a{
+    font-family:var(--font-display);
+    font-size:21px;
+    color:var(--ink);
+    letter-spacing:-.01em;
+    white-space:normal;
+  }
+  .main-nav a.active{color:var(--accent-ink)}
+  .nav-drop{display:block;width:100%}
+  .dropdown{
+    position:static;
+    opacity:1;
+    visibility:visible;
+    transform:none;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+    min-width:0;
+    padding:6px 0 18px 18px;
+    display:none;
+    gap:4px;
+  }
+  .nav-drop.submenu-open .dropdown{display:grid}
+  .nav-drop{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;width:100%}
+  .drop-toggle{grid-column:1}
+  .nav-subtoggle{
+    grid-column:2;grid-row:1;width:44px;height:44px;margin-left:auto;
+    display:grid;place-items:center;border:1px solid var(--line-strong);
+    border-radius:10px;background:var(--surface);color:var(--accent);cursor:pointer;
+  }
+  .nav-subtoggle::before{content:"+";font-size:20px;line-height:1}
+  .nav-subtoggle[aria-expanded="true"]::before{content:"−"}
+  .dropdown{grid-column:1/-1}
+  .dropdown a{
+    font-family:var(--font-body);
+    font-size:14px;
+    color:var(--muted);
+    text-transform:none;
+    letter-spacing:0;
+    padding:10px 12px;
+    border-radius:10px;
+  }
+  .burger{display:flex}
+}
+
+@media (max-width:1080px){
+  .main-nav{
+    visibility:hidden;
+    pointer-events:none;
+    transition:transform .5s cubic-bezier(.22,1,.36,1),visibility 0s linear .5s;
+  }
+  .masthead.nav-open .main-nav{
+    transform:translateY(0);
+    visibility:visible;
+    pointer-events:auto;
+    transition:transform .5s cubic-bezier(.22,1,.36,1),visibility 0s;
+  }
+  .nav-drop:hover .dropdown,
+  .nav-drop:focus-within .dropdown{transform:none}
+}
+
 @media (max-width:640px){
   .wrow-main{flex-basis:100%}
   .con-item{grid-template-columns:1fr;gap:6px}
+  .svc-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr;gap:32px}
   .status-stats{grid-template-columns:1fr 1fr;gap:12px}
   .steps{grid-template-columns:1fr}
+  .ind-scroll{max-height:none;overflow:visible;box-shadow:none}
+  .ind-scroll table{display:block;width:100%;min-width:0;table-layout:auto}
+  .ind-scroll thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .ind-scroll tbody{display:grid;gap:10px;padding:12px}
+  .ind-scroll tbody tr:not(.ind-sep){display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  .ind-scroll tbody tr:not(.ind-sep) td,
+  .ind-scroll tbody tr:not(.ind-sep) td:first-child{
+    position:static;left:auto;z-index:auto;
+    display:grid;grid-template-columns:minmax(6.5rem,.42fr) minmax(0,1fr);gap:10px;
+    padding:11px 13px;border-bottom:1px solid var(--line);
+    background:transparent;white-space:normal;
+  }
+  .ind-scroll tbody tr:not(.ind-sep) td::before{
+    color:var(--muted);font:10px/1.5 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;
+  }
+  .ind-scroll tbody tr:not(.ind-sep) td:nth-child(1)::before{content:"Код"}
+  .ind-scroll tbody tr:not(.ind-sep) td:nth-child(2)::before{content:"Показатель"}
+  .ind-scroll tbody tr:not(.ind-sep) td:nth-child(3)::before{content:"Диапазон измерений"}
+  .ind-scroll tbody tr:not(.ind-sep) td:last-child{border-bottom:0}
+  .ind-scroll td:nth-child(1){font-size:12px}
+  .ind-scroll td.ind-ranges span{white-space:normal;overflow-wrap:anywhere;line-height:1.6}
+  .ind-scroll tbody tr.ind-sep{display:block;border-radius:10px;background:var(--accent);color:#fff}
+  .ind-scroll tbody tr.ind-sep td{display:block;padding:10px 13px;border:0;color:#fff}
+  .ind-scroll tbody tr[hidden]{display:none!important}
+}
+
+@media (max-width:840px){
+  .ind-scroll{scrollbar-width:thin;scrollbar-color:var(--line-strong) var(--surface)}
+  .ind-scroll{box-shadow:inset -12px 0 14px -12px var(--accent)}
 }
 
 @media (max-width:560px){
@@ -873,7 +1020,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   <div class="wrap mast-in">
     <a class="brand" href="#top" aria-label="АналитЭко — на главную">
       <span class="logo-slot" title="Место для логотипа">
-        <img src="logo.jpeg" alt="АналитЭко">
+        <img src="logo.png" alt="АналитЭко">
       </span>
     </a>
     <nav class="main-nav" id="main-nav" aria-label="Основная навигация">
@@ -881,14 +1028,16 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
       <a href="#research">Услуги</a>
       <span class="nav-drop">
         <a href="#air" class="drop-toggle">Мониторинг воздуха</a>
-        <div class="dropdown">
+        <button class="nav-subtoggle" type="button" aria-expanded="false" aria-controls="nav-air-submenu" aria-label="Показать подразделы: Мониторинг воздуха"></button>
+        <div class="dropdown" id="nav-air-submenu">
           <a href="#air">Анализ атмосферного воздуха</a>
           <a href="#air">Измерения шума на границе СЗЗ</a>
         </div>
       </span>
       <span class="nav-drop">
         <a href="#emissions" class="drop-toggle">Контроль выбросов</a>
-        <div class="dropdown">
+        <button class="nav-subtoggle" type="button" aria-expanded="false" aria-controls="nav-emissions-submenu" aria-label="Показать подразделы: Контроль выбросов"></button>
+        <div class="dropdown" id="nav-emissions-submenu">
           <a href="#emissions">Контроль промышленных выбросов</a>
           <a href="#emissions">Определение эффективности работы ГОУ</a>
           <a href="#emissions">Обследование источников выбросов</a>
@@ -896,7 +1045,8 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
       </span>
       <span class="nav-drop">
         <a href="#blog" class="drop-toggle">Исследования и разработки</a>
-        <div class="dropdown">
+        <button class="nav-subtoggle" type="button" aria-expanded="false" aria-controls="nav-research-submenu" aria-label="Показать подразделы: Исследования и разработки"></button>
+        <div class="dropdown" id="nav-research-submenu">
           <a href="#blog">Научно-прикладные исследования в области экологии</a>
           <a href="#blog">Решение нестандартных задач в области экологии</a>
           <a href="#blog">Внедрение методик измерений</a>
@@ -904,7 +1054,8 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
       </span>
       <span class="nav-drop">
         <a href="#about" class="drop-toggle">О нас</a>
-        <div class="dropdown dropdown--about">
+        <button class="nav-subtoggle" type="button" aria-expanded="false" aria-controls="nav-about-submenu" aria-label="Показать подразделы: О нас"></button>
+        <div class="dropdown dropdown--about" id="nav-about-submenu">
           <a href="#about-team">Команда</a>
           <a href="#about-why">Наши преимущества</a>
           <a href="#about-company">Компания</a>
@@ -1156,8 +1307,10 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 
     <div class="ind-grid">
       <div class="ind-table rv">
+        <label class="ind-search"><span class="sr-only">Поиск по таблице атмосферного воздуха</span><input type="search" data-table-search="air-indicators" placeholder="Поиск по показателю, коду или диапазону"></label>
+        <p class="ind-empty" hidden>Ничего не найдено.</p>
         <div class="ind-scroll">
-          <table>
+          <table id="air-indicators">
             <caption class="sr-only">Измеряемые показатели атмосферного воздуха</caption>
             <colgroup><col class="c-code"><col class="c-name"><col class="c-range"></colgroup>
             <thead><tr><th>Код</th><th>Показатель</th><th>Диапазон измерений</th></tr></thead>
@@ -1515,8 +1668,10 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 
     <div class="ind-grid">
       <div class="ind-table rv">
+        <label class="ind-search"><span class="sr-only">Поиск по таблице промышленных выбросов</span><input type="search" data-table-search="emission-indicators" placeholder="Поиск по показателю, коду или диапазону"></label>
+        <p class="ind-empty" hidden>Ничего не найдено.</p>
         <div class="ind-scroll">
-          <table>
+          <table id="emission-indicators">
             <caption class="sr-only">Измеряемые показатели промышленных выбросов</caption>
             <colgroup><col class="c-code"><col class="c-name"><col class="c-range"></colgroup>
             <thead><tr><th>Код</th><th>Показатель</th><th>Диапазон измерений</th></tr></thead>
@@ -2226,7 +2381,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="#top" style="display:flex;align-items:center;gap:13px">
-          <span class="logo-slot" title="Место для логотипа"><span class="logo-ph mono">Лого</span></span>
+          <span class="logo-slot" title="Место для логотипа"><img src="logo.png" alt="АналитЭко"></span>
           <span class="brand-text"><strong>АналитЭко</strong><small>лаборатория</small></span>
         </a>
         <p class="foot-acc"><a href="https://pub.fsa.gov.ru/ral/view/39037/accredited-entity" target="_blank" rel="noopener">Уникальный номер записи об аккредитации в реестре аккредитованных лиц <b>RA.RU.21СО07</b> · ООО «ЦНПИ» АналитЭко</a></p>
@@ -2263,6 +2418,38 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   $$('.js-tel').forEach(function(a){ a.textContent = TEL; a.href = TEL_HREF; });
   $$('.js-mail').forEach(function(a){ a.textContent = MAIL; a.href = 'mailto:' + MAIL; });
 
+  /* Поиск по таблицам показателей */
+  $$('[data-table-search]').forEach(function(input){
+    var table = document.getElementById(input.getAttribute('data-table-search'));
+    var empty = input.closest('.ind-table').querySelector('.ind-empty');
+    var rows = $$('tbody tr', table);
+    input.addEventListener('input', function(){
+      var query = input.value.trim().toLocaleLowerCase('ru-RU');
+      var visibleCount = 0;
+      rows.forEach(function(row){
+        if(row.classList.contains('ind-sep')) return;
+        var match = !query || row.textContent.toLocaleLowerCase('ru-RU').includes(query);
+        row.hidden = !match;
+        if(match) visibleCount++;
+      });
+      rows.forEach(function(row, i){
+        if(!row.classList.contains('ind-sep')) return;
+        var headingMatch = query && row.textContent.toLocaleLowerCase('ru-RU').includes(query);
+        var sectionRows = [];
+        for(var j=i+1;j<rows.length && !rows[j].classList.contains('ind-sep');j++) sectionRows.push(rows[j]);
+        if(headingMatch){
+          sectionRows.forEach(function(sectionRow){
+            if(sectionRow.hidden) visibleCount++;
+            sectionRow.hidden = false;
+          });
+        }
+        var hasVisibleRows = sectionRows.some(function(sectionRow){ return !sectionRow.hidden; });
+        row.hidden = !headingMatch && !hasVisibleRows;
+      });
+      empty.hidden = visibleCount !== 0;
+    });
+  });
+
   /* Наверх */
   $$('a[href="#top"]').forEach(function(a){
     a.addEventListener('click', function(e){
@@ -2273,16 +2460,39 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 
   /* Бургер */
   var burger = $('#burger'), mast = $('.masthead');
-  burger.addEventListener('click', function(){
-    var open = mast.classList.toggle('nav-open');
+  function setMenuOpen(open){
+    mast.classList.toggle('nav-open', open);
     burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
     document.body.style.overflow = open ? 'hidden' : '';
+    if(!open){
+      $$('.nav-subtoggle').forEach(function(btn){
+        btn.setAttribute('aria-expanded','false');
+        btn.setAttribute('aria-label','Показать подразделы: ' + btn.closest('.nav-drop').querySelector('.drop-toggle').textContent.trim());
+        btn.closest('.nav-drop').classList.remove('submenu-open');
+      });
+    }
+  }
+  burger.addEventListener('click', function(){
+    setMenuOpen(!mast.classList.contains('nav-open'));
+  });
+  $$('.nav-subtoggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', open);
+      btn.setAttribute('aria-label', (open ? 'Скрыть' : 'Показать') + ' подразделы: ' + btn.closest('.nav-drop').querySelector('.drop-toggle').textContent.trim());
+      btn.closest('.nav-drop').classList.toggle('submenu-open', open);
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && mast.classList.contains('nav-open')){
+      setMenuOpen(false);
+      burger.focus();
+    }
   });
   $$('#main-nav a').forEach(function(a){
     a.addEventListener('click', function(){
-      mast.classList.remove('nav-open');
-      burger.setAttribute('aria-expanded','false');
-      document.body.style.overflow = '';
+      setMenuOpen(false);
     });
   });
 
