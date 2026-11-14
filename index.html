@@ -497,7 +497,7 @@ h1{
   line-height:1.35;
   letter-spacing:-.01em;
 }
-.wrow-desc{font-size:15px;color:var(--muted);max-width:72ch;line-height:1.6}
+.wrow-desc{font-size:15px;color:var(--muted);max-width:none;line-height:1.6}
 /* кнопка «Подробнее» — фон как у «Рассчитать стоимость» */
 .wrow-btn{
   flex-shrink:0;
@@ -547,13 +547,13 @@ h1{
 #wrow-em-2 .wrow-body,
 #wrow-em-3 .wrow-body{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:minmax(0,1fr);
   align-items:start;
-  gap:10px 12px;
+  gap:10px;
 }
 #wrow-em-1 .wrow-label,
 #wrow-em-2 .wrow-label,
-#wrow-em-3 .wrow-label{grid-column:1/-1;margin:0 0 2px}
+#wrow-em-3 .wrow-label{margin:0 0 2px}
 #wrow-em-1 .wrow-text,
 #wrow-em-2 .wrow-text,
 #wrow-em-3 .wrow-text{
@@ -561,8 +561,6 @@ h1{
   border:1px solid var(--line);border-radius:12px;background:var(--surface-2);
   font-size:14px;line-height:1.6;
 }
-#wrow-em-1 .wrow-text:last-child,
-#wrow-em-2 .wrow-text:last-child{grid-column:1/-1}
 
 /* Single-column step cards in the air, noise, and methods detail panels. */
 #wrow-air-1 .wrow-body,
@@ -678,7 +676,13 @@ h1{
 .ab-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:start}
 #lab .ab-2col{align-items:stretch}
 #lab .fig-cert{aspect-ratio:2908/2056;min-height:0}
-.fig-cert{aspect-ratio:2908/2056;object-fit:contain;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.cert-open{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in}
+.fig-cert{display:block;width:100%;height:auto;aspect-ratio:2908/2056;object-fit:contain;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.cert-open:focus-visible,.cert-dialog-close:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.cert-dialog[hidden]{display:none}
+.cert-dialog{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:24px;background:rgba(10,14,11,.9);backdrop-filter:blur(5px)}
+.cert-dialog img{display:block;max-width:96vw;max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);width:auto;height:auto;object-fit:contain;background:#fff;border-radius:10px}
+.cert-dialog-close{position:absolute;top:18px;right:18px;display:grid;place-items:center;width:48px;height:48px;border:1px solid rgba(255,255,255,.45);border-radius:50%;background:rgba(20,24,21,.65);color:#fff;font:400 32px/1 Manrope,sans-serif;cursor:pointer}
 
 .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px 56px;margin-top:8px}
 .why-col{display:grid;gap:32px}
@@ -870,7 +874,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   .hero-grid{grid-template-columns:1fr;gap:48px}
   .hero-img{aspect-ratio:1280/853;max-width:520px;margin:0 auto}
   .ab-2col{grid-template-columns:1fr;gap:36px}
-  .fig-cert{width:100%;max-width:360px;margin-inline:auto;justify-self:center}
+  .cert-open{width:100%;max-width:360px;margin-inline:auto;justify-self:center}
   .foot-grid{grid-template-columns:1fr 1fr;gap:32px 24px}
   .svc-grid{grid-template-columns:1fr 1fr;gap:16px}
   .ind-grid{grid-template-columns:1fr;gap:36px}
@@ -1045,8 +1049,6 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   #wrow-em-1 .wrow-text,
   #wrow-em-2 .wrow-text,
   #wrow-em-3 .wrow-text{padding:11px 13px;font-size:13.5px;line-height:1.55}
-  #wrow-em-1 .wrow-text:last-child,
-  #wrow-em-2 .wrow-text:last-child{grid-column:auto}
   #wrow-air-1 .wrow-text,
   #wrow-air-2 .wrow-text,
   #wrow-blog-1 .wrow-text,
@@ -1062,7 +1064,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td,
   .ind-scroll tbody tr:not(.ind-sep):not(.ind-expand-row) td:first-child{
     position:static;left:auto;z-index:auto;
-    display:grid;grid-template-columns:minmax(6.5rem,.42fr) minmax(0,1fr);gap:10px;
+    display:grid;grid-template-columns:minmax(0,1fr);gap:4px;
     padding:11px 13px;border-bottom:1px solid var(--line);
     background:transparent;white-space:normal;
   }
@@ -1359,7 +1361,9 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
         <h4 class="ab-sub">Аккредитованная экоаналитическая лаборатория</h4>
         <p>Экоаналитическая лаборатория осуществляет комплексные исследования атмосферного воздуха, промышленных выбросов и шума различного уровня сложности. Также лаборатория обеспечивает реализацию аналитической составляющей научно-прикладных исследований в области экологии. Квалифицированные сотрудники и высокоточное оборудование позволяют быть уверенными в высоком качестве и достоверности полученных результатов. Экоаналитическая лаборатория аккредитована национальным органом по аккредитации – Федеральной службой по аккредитации. Уникальный номер записи об аккредитации в реестре аккредитованных лиц <b>RA.RU.21СО07</b>.</p>
       </div>
-      <img class="fig-cert rv" style="--d:.1s" src="attestat.png" alt="Аттестат аккредитации лаборатории">
+      <button class="cert-open rv" style="--d:.1s" type="button" aria-label="Открыть аттестат аккредитации на весь экран" aria-haspopup="dialog" aria-controls="certificate-dialog">
+        <img class="fig-cert" src="attestat.png" alt="Аттестат аккредитации лаборатории">
+      </button>
     </div>
     <div class="status-stats rv" style="--d:.1s">
       <div class="ss"><b data-count="100">0</b><span>показателей в области аккредитации</span></div>
@@ -2499,6 +2503,11 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 </section>
 </main>
 
+<div class="cert-dialog" id="certificate-dialog" role="dialog" aria-modal="true" aria-label="Аттестат аккредитации" hidden>
+  <button class="cert-dialog-close" type="button" aria-label="Закрыть">×</button>
+  <img src="attestat.png" alt="Аттестат аккредитации лаборатории">
+</div>
+
 <footer>
   <div class="wrap">
     <div class="foot-grid">
@@ -2533,6 +2542,30 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $  = function(s,c){ return (c||document).querySelector(s); };
   var $$ = function(s,c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); };
+
+  /* Просмотр аттестата */
+  var certificateDialog = $('#certificate-dialog');
+  var certificateOpener = $('.cert-open');
+  var certificateClose = $('.cert-dialog-close');
+  var previousBodyOverflow = '';
+  function closeCertificate(){
+    if(!certificateDialog || certificateDialog.hidden) return;
+    certificateDialog.hidden = true;
+    document.body.style.overflow = previousBodyOverflow;
+    if(certificateOpener) certificateOpener.focus();
+  }
+  if(certificateDialog && certificateOpener && certificateClose){
+    certificateOpener.addEventListener('click', function(){
+      previousBodyOverflow = document.body.style.overflow;
+      certificateDialog.hidden = false;
+      document.body.style.overflow = 'hidden';
+      certificateClose.focus();
+    });
+    certificateClose.addEventListener('click', closeCertificate);
+    certificateDialog.addEventListener('click', function(e){
+      if(e.target === certificateDialog) closeCertificate();
+    });
+  }
 
   /* Контакты */
   var TEL = ['+7','(918)','264-26-27'].join(' ');
@@ -2662,7 +2695,15 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     });
   });
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape' && searchPanel && !searchPanel.hidden){
+    if(certificateDialog && !certificateDialog.hidden){
+      if(e.key === 'Escape'){
+        e.preventDefault();
+        closeCertificate();
+      } else if(e.key === 'Tab'){
+        e.preventDefault();
+        certificateClose.focus();
+      }
+    } else if(e.key === 'Escape' && searchPanel && !searchPanel.hidden){
       closeSiteSearch(true);
     } else if(e.key === 'Escape' && mast.classList.contains('nav-open')){
       setMenuOpen(false);
