@@ -100,7 +100,7 @@ button{font:inherit;color:inherit}
   color:var(--muted);
   flex-shrink:0;
 }
-.logo-slot img{mix-blend-mode:multiply}
+.logo-slot img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:contain;mix-blend-mode:multiply}
 .logo-ph{font-size:11px;letter-spacing:.22em;text-transform:uppercase}
 .brand-text strong{font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:-.01em;display:block;line-height:1.1}
 .brand-text small{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
@@ -459,12 +459,15 @@ h1{
 
 /* фото в разделах */
 .ind-photo{
+  display:block;
   width:100%;
-  aspect-ratio:3/4;
-  object-fit:cover;
+  height:auto;
+  object-fit:contain;
   border-radius:var(--radius);
   border:1px solid var(--line);
 }
+.ind-carousel{width:100%;min-width:0;overflow:hidden;border-radius:var(--radius)}
+.ind-carousel .ind-photo{transition:opacity .35s ease}
 
 /* CTA-колонка под таблицей */
 .cta-col{display:flex;flex-direction:column;align-items:flex-start;gap:20px;margin-top:32px}
@@ -853,6 +856,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
 .foot-brand .brand-text strong{font-size:20px;color:var(--footer-ink)}
 .foot-brand .brand-text small{color:var(--footer-muted)}
 .foot-brand .logo-slot{border:0;background:transparent;color:var(--footer-muted)}
+.foot-brand .logo-slot img{mix-blend-mode:normal}
 .foot-acc{margin-top:20px;font-size:14px;line-height:1.8;color:var(--footer-muted);max-width:52ch}
 .foot-acc a{color:var(--footer-ink);border-bottom:1px solid var(--footer-line);transition:color .2s ease,border-color .2s ease}
 .foot-acc a:hover{color:var(--footer-accent);border-color:var(--footer-accent)}
@@ -879,7 +883,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   .svc-grid{grid-template-columns:1fr 1fr;gap:16px}
   .ind-grid{grid-template-columns:1fr;gap:36px}
   .ind-scroll .c-range{width:190px}
-  .ind-photo{aspect-ratio:3/4;max-width:440px;margin:0 auto}
+  .ind-carousel{max-width:440px;margin:0 auto;justify-self:center}
   .work-cols{grid-template-columns:1fr;gap:28px}
   .status-stats{grid-template-columns:1fr 1fr;gap:14px}
   .steps{grid-template-columns:1fr 1fr;gap:28px}
@@ -1136,7 +1140,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   <div class="wrap mast-in">
     <a class="brand" href="#top" aria-label="АналитЭко — на главную">
       <span class="logo-slot" title="Место для логотипа">
-        <img src="logo.jpeg" alt="АналитЭко">
+        <img src="logo_black.png" data-fallback="logo.jpeg" alt="АналитЭко">
       </span>
     </a>
     <nav class="main-nav" id="main-nav" aria-label="Основная навигация">
@@ -1705,7 +1709,9 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           </table>
         </div>
       </div>
-      <img class="ind-photo rv" style="--d:.1s" src="foto2.jpeg" alt="Измерения атмосферного воздуха">
+      <div class="ind-carousel rv" style="--d:.1s" data-carousel="monitoring1.jpeg|monitoring2.jpeg|monitoring3.jpeg" role="group" aria-label="Фотографии мониторинга атмосферного воздуха">
+        <img class="ind-photo" src="foto2.jpeg" alt="Измерения атмосферного воздуха">
+      </div>
     </div>
 
     <div class="cta-col rv" style="--d:.15s">
@@ -1997,7 +2003,9 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
           </table>
         </div>
       </div>
-      <img class="ind-photo rv" style="--d:.1s" src="foto2.jpeg" alt="Измерения промышленных выбросов">
+      <div class="ind-carousel rv" style="--d:.1s" data-carousel="control1.jpeg|control2.jpeg|control3.jpeg" role="group" aria-label="Фотографии контроля промышленных выбросов">
+        <img class="ind-photo" src="foto2.jpeg" alt="Измерения промышленных выбросов">
+      </div>
     </div>
 
     <div class="cta-col rv" style="--d:.15s">
@@ -2513,7 +2521,7 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="#top" style="display:flex;align-items:center;gap:13px">
-          <span class="logo-slot" title="Место для логотипа"><img src="logo.jpeg" alt="АналитЭко"></span>
+          <span class="logo-slot" title="Место для логотипа"><img src="logo_white.png" data-fallback="logo.jpeg" alt="АналитЭко"></span>
           <span class="brand-text"><strong>АналитЭко</strong><small>лаборатория</small></span>
         </a>
         <p class="foot-acc"><a href="https://pub.fsa.gov.ru/ral/view/39037/accredited-entity" target="_blank" rel="noopener">Уникальный номер записи об аккредитации в реестре аккредитованных лиц <b>RA.RU.21СО07</b> · ООО «ЦНПИ» АналитЭко</a></p>
@@ -2542,6 +2550,59 @@ footer{background:var(--footer-bg);color:var(--footer-ink)}
   var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $  = function(s,c){ return (c||document).querySelector(s); };
   var $$ = function(s,c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); };
+
+  $$('.logo-slot img[data-fallback]').forEach(function(image){
+    function useFallback(){
+      if(image.dataset.fallbackApplied) return;
+      image.dataset.fallbackApplied = 'true';
+      image.src = image.dataset.fallback;
+    }
+    image.addEventListener('error', useFallback, {once:true});
+    if(image.complete && image.naturalWidth === 0) useFallback();
+  });
+
+  /* Автоматические фотокарусели: пауза при наведении и в скрытой вкладке. */
+  $$('.ind-carousel[data-carousel]').forEach(function(carousel){
+    var image = $('img', carousel);
+    var requestedSlides = carousel.getAttribute('data-carousel').split('|').filter(Boolean);
+    var availableSlides = new Array(requestedSlides.length);
+    var checkedSlides = 0;
+    var currentSlide = 0;
+    var timer = null;
+    function startCarousel(){
+      if(timer || availableSlides.length < 2 || document.hidden || carousel.matches(':hover')) return;
+      timer = window.setInterval(function(){
+        currentSlide = (currentSlide + 1) % availableSlides.length;
+        image.src = availableSlides[currentSlide];
+      }, 2000);
+    }
+    function stopCarousel(){
+      if(timer){window.clearInterval(timer);timer = null;}
+    }
+    carousel.addEventListener('mouseenter', stopCarousel);
+    carousel.addEventListener('mouseleave', startCarousel);
+    document.addEventListener('visibilitychange', function(){
+      if(document.hidden) stopCarousel();
+      else startCarousel();
+    });
+    requestedSlides.forEach(function(src, index){
+      var preload = new Image();
+      function finish(loaded){
+        if(loaded) availableSlides[index] = src;
+        checkedSlides++;
+        if(checkedSlides !== requestedSlides.length) return;
+        availableSlides = availableSlides.filter(Boolean);
+        if(availableSlides.length){
+          currentSlide = 0;
+          image.src = availableSlides[0];
+          startCarousel();
+        }
+      }
+      preload.addEventListener('load', function(){finish(true)}, {once:true});
+      preload.addEventListener('error', function(){finish(false)}, {once:true});
+      preload.src = src;
+    });
+  });
 
   /* Просмотр аттестата */
   var certificateDialog = $('#certificate-dialog');
